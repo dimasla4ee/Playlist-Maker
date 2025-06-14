@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="HeaderText">
+        <item name="android:fontFamily">@font/inter_tight</item>
+        <item name="android:fontWeight">500</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/medium_text</item>
+    </style>
+
+    <style name="RegularText" parent="HeaderText">
+        <item name="android:fontWeight">400</item>
+        <item name="android:textSize">@dimen/regular_text</item>
+    </style>
+
+    <style name="BigButton" parent="@style/HeaderText">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="cornerRadius">@dimen/radius</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:textSize">@dimen/medium_text</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">@dimen/small_padding</item>
+        <item name="iconTint">@color/black</item>
+    </style>
+
+    <style name="SettingButton" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:fontFamily">@font/inter_tight</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontWeight">400</item>
+        <item name="android:textSize">@dimen/regular_text</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:backgroundTint">@color/transparent</item>
+        <item name="iconGravity">end</item>
+        <item name="android:gravity">start|center_vertical</item>
+        <item name="iconTint">@color/black</item>
+        <item name="android:minWidth">64dip</item>
+    </style>
+
+</resources>
