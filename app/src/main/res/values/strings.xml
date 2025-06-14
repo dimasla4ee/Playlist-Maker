@@ -8,4 +8,11 @@
     <string name="share_app">Share this App</string>
     <string name="text_support">Text Support</string>
     <string name="user_agreement">User Agreement</string>
+    <string name="yandex_practicum_course_link" translatable="false">https://practicum.yandex.ru/referrals/?ref_code=gAAAAABoTdPbjwyqHhQ2jDogo1jktmwx_ANx8txVwvN1coXEluF02ER4F77hQRz8Ynn3E1vzIMTt-PHLQlhFj3n3MTIpCav2Iw%3D%3D</string>
+    <string name="plain_text_intent_type" translatable="false">text/plain</string>
+    <string name="mailto_uri_data" translatable="false">mailto:</string>
+    <string name="developer_email" translatable="false">de.krylov@vk.com</string>
+    <string name="letter_subject">Message for Playlist Maker developers</string>
+    <string name="letter_text">Thank you for your great app!</string>
+    <string name="user_agreement_link" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
 </resources>
