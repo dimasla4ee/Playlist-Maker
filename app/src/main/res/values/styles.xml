@@ -2,7 +2,7 @@
 <resources>
 
     <style name="HeaderText">
-        <item name="android:fontFamily">@font/inter_tight</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:fontWeight">500</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/medium_text</item>
@@ -13,20 +13,22 @@
         <item name="android:textSize">@dimen/regular_text</item>
     </style>
 
-    <style name="BigButton" parent="@style/HeaderText">
+    <style name="BigButton" parent="Widget.Material3.Button.UnelevatedButton">
         <item name="android:textAllCaps">false</item>
         <item name="android:textStyle">bold</item>
         <item name="cornerRadius">@dimen/radius</item>
         <item name="android:backgroundTint">@color/white</item>
         <item name="android:textSize">@dimen/medium_text</item>
         <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:fontWeight">500</item>
         <item name="iconGravity">textStart</item>
         <item name="iconPadding">@dimen/small_padding</item>
         <item name="iconTint">@color/black</item>
     </style>
 
     <style name="SettingButton" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:fontFamily">@font/inter_tight</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:fontWeight">400</item>
         <item name="android:textSize">@dimen/regular_text</item>
