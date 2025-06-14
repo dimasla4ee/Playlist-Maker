@@ -26,7 +26,7 @@
         android:layout_marginVertical="@dimen/small_padding"
         android:layout_weight="1"
         android:text="@string/search"
-        app:icon="@drawable/ic_search" />
+        app:icon="@drawable/ic_search_24" />
 
     <Button
         android:id="@+id/mediaLibraryButton"
@@ -36,7 +36,7 @@
         android:layout_marginVertical="@dimen/small_padding"
         android:layout_weight="1"
         android:text="@string/media_library"
-        app:icon="@drawable/ic_media_library" />
+        app:icon="@drawable/ic_media_library_24" />
 
     <Button
         android:id="@+id/settingsButton"
@@ -46,5 +46,5 @@
         android:layout_marginVertical="@dimen/small_padding"
         android:layout_weight="1"
         android:text="@string/settings"
-        app:icon="@drawable/ic_settings" />
+        app:icon="@drawable/ic_settings_24" />
 </LinearLayout>
