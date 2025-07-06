@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/LinearLayout"
-    android:paddingBottom="@dimen/big_padding">
+    android:paddingBottom="@dimen/normal_150">
 
     <LinearLayout
         style="@style/LinearLayout.PanelHeader"
-        android:layout_marginBottom="@dimen/medium_padding">
+        android:layout_marginBottom="@dimen/normal_100">
 
         <TextView
             android:id="@+id/appNameTextView"

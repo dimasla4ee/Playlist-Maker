@@ -10,4 +10,5 @@
     <string name="user_agreement">Пользовательское соглашение</string>
     <string name="letter_subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="letter_text">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="clear">Очистить</string>
 </resources>
