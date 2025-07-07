@@ -4,6 +4,12 @@
 
     <LinearLayout style="@style/LinearLayout.PanelHeader">
 
+        <ImageButton
+            android:id="@+id/backButton"
+            style="@style/Icon.PanelHeader"
+            android:contentDescription="@string/back"
+            android:src="@drawable/ic_arrow_back_24" />
+
         <TextView
             android:id="@+id/searchTextView"
             style="@style/Text.PanelHeader"
