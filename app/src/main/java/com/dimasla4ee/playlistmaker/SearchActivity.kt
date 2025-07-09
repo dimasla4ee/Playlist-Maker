@@ -1,8 +1,6 @@
 package com.dimasla4ee.playlistmaker
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -10,6 +8,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doOnTextChanged
 
 class SearchActivity : AppCompatActivity() {
     private var query: String = EMPTY_QUERY
@@ -37,32 +36,10 @@ class SearchActivity : AppCompatActivity() {
 
         searchbar.setText(query)
 
-        val searchBarTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {
-                //TODO: Not yet implemented
-            }
-
-            override fun onTextChanged(
-                s: CharSequence?,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {
-                clearQueryButton.visibility = if (s.isNullOrEmpty()) View.GONE else View.VISIBLE
-                query = s?.toString() ?: EMPTY_QUERY
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                //TODO: Not yet implemented
-            }
+        searchbar.doOnTextChanged { text, _, _, _ ->
+            clearQueryButton.visibility = if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
+            query = text?.toString() ?: EMPTY_QUERY
         }
-
-        searchbar.addTextChangedListener(searchBarTextWatcher)
 
         clearQueryButton.setOnClickListener {
             inputMethodManager?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
@@ -81,7 +58,7 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    companion object {
+    private companion object {
         const val EMPTY_QUERY = ""
         const val QUERY_KEY = "QUERY_KEY"
     }
