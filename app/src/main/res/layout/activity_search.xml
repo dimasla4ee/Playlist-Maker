@@ -1,10 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".SearchActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/LinearLayout">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout style="@style/LinearLayout.PanelHeader">
+
+        <ImageButton
+            android:id="@+id/backButton"
+            style="@style/Icon.PanelHeader"
+            android:contentDescription="@string/back"
+            android:src="@drawable/ic_arrow_back_24" />
+
+        <TextView
+            android:id="@+id/searchTextView"
+            style="@style/Text.PanelHeader"
+            android:text="@string/search" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/searchBar"
+        style="@style/LinearLayout.Searchbar">
+
+        <ImageView
+            style="@style/Icon.SearchBar"
+            android:contentDescription="@string/search"
+            android:src="@drawable/ic_search_24" />
+
+        <EditText
+            android:id="@+id/searchBarEditText"
+            style="@style/EditText.SearchBar"
+            android:autofillHints="none"
+            android:hint="@string/search"
+            android:inputType="textAutoComplete"
+            android:textSize="@dimen/text_16" />
+
+        <ImageView
+            android:id="@+id/clearSearchBarButton"
+            style="@style/Icon.SearchBar"
+            android:contentDescription="@string/clear"
+            android:src="@drawable/ic_clear_24"
+            android:visibility="gone" />
+    </LinearLayout>
+</LinearLayout>
