@@ -29,6 +29,8 @@ class SearchActivity : AppCompatActivity() {
         val queryEditText = binding.searchBarEditText
         val clearQueryButton = binding.clearSearchBarButton
         val backButton = binding.backButton
+        val tracksRecyclerView = binding.tracksRecyclerView
+        val tracksAdapter = TracksAdapter(placeholderTracks)
         val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
 
         setContentView(binding.root)
@@ -55,6 +57,8 @@ class SearchActivity : AppCompatActivity() {
         searchBarContainer.setOnClickListener {
             queryEditText.requestFocus()
         }
+
+        tracksRecyclerView.adapter = tracksAdapter
     }
 
     private companion object {

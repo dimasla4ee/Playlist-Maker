@@ -18,6 +18,7 @@
     <dimen name="regular_weight">400</dimen>
     <dimen name="medium_weight">500</dimen>
 
+    <dimen name="text_11">11sp</dimen>
     <dimen name="text_16">16sp</dimen>
     <dimen name="text_22">22sp</dimen>
 </resources>

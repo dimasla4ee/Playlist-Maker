@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/trackContainer"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/setting_height"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/small_150">
+
+    <ImageView
+        android:id="@+id/albumCover"
+        android:layout_width="@dimen/big_150"
+        android:layout_height="@dimen/big_150"
+        android:importantForAccessibility="no" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/small_100">
+
+        <TextView
+            android:id="@+id/titleTextView"
+            style="@style/Text.Regular.16"
+            android:layout_width="match_parent"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="?attr/colorOnSurface" />
+
+        <TextView
+            android:id="@+id/artistAndTimeTextView"
+            style="@style/Text.Regular.11"
+            android:layout_width="match_parent"
+            android:ellipsize="middle"
+            android:maxLines="1"
+            android:textColor="?attr/colorOnSurfaceVariant" />
+    </LinearLayout>
+
+    <ImageView
+        style="@style/Icon"
+        android:contentDescription="@string/open_track"
+        android:src="@drawable/ic_arrow_forward_24"
+        app:tint="?attr/colorOnSurfaceVariant" />
+</LinearLayout>
