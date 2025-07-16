@@ -44,6 +44,17 @@ class SearchActivity : AppCompatActivity() {
         queryEditText.doOnTextChanged { text, _, _, _ ->
             clearQueryButton.visibility = if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
             query = text?.toString() ?: EMPTY_QUERY
+
+            if (query.isNotEmpty()) {
+                val filteredTracks = placeholderTracks.filter { track ->
+                    val titleContainsQuery = track.title.contains(query, ignoreCase = true)
+                    val artistContainsQuery = track.artist.contains(query, ignoreCase = true)
+                    titleContainsQuery || artistContainsQuery
+                }
+                tracksAdapter.updateTracks(filteredTracks)
+            } else {
+                tracksAdapter.updateTracks(placeholderTracks)
+            }
         }
 
         clearQueryButton.setOnClickListener {
