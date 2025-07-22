@@ -3,14 +3,12 @@ package com.dimasla4ee.playlistmaker
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
+import com.dimasla4ee.playlistmaker.databinding.ActivitySearchBinding
 
 class SearchActivity : AppCompatActivity() {
+
     private var query: String = EMPTY_QUERY
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -25,37 +23,53 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
 
+        val binding = ActivitySearchBinding.inflate(layoutInflater)
+        val searchBarContainer = binding.searchBar
+        val queryEditText = binding.searchBarEditText
+        val clearQueryButton = binding.clearSearchBarButton
+        val backButton = binding.backButton
+        val tracksRecyclerView = binding.tracksRecyclerView
+        val tracksAdapter = TracksAdapter(placeholderTracks)
         val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
 
-        val searchbarLayout = findViewById<LinearLayout>(R.id.searchBar)
-        val searchbar = findViewById<EditText>(R.id.searchBarEditText)
-        val clearQueryButton = findViewById<ImageView>(R.id.clearSearchBarButton)
-        val backButton = findViewById<ImageButton>(R.id.backButton)
+        setContentView(binding.root)
 
-        searchbar.setText(query)
+        backButton.setOnClickListener {
+            finish()
+        }
 
-        searchbar.doOnTextChanged { text, _, _, _ ->
+        queryEditText.setText(query)
+
+        queryEditText.doOnTextChanged { text, _, _, _ ->
             clearQueryButton.visibility = if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
             query = text?.toString() ?: EMPTY_QUERY
+
+            if (query.isNotEmpty()) {
+                val filteredTracks = placeholderTracks.filter { track ->
+                    val titleContainsQuery = track.title.contains(query, ignoreCase = true)
+                    val artistContainsQuery = track.artist.contains(query, ignoreCase = true)
+                    titleContainsQuery || artistContainsQuery
+                }
+                tracksAdapter.updateTracks(filteredTracks)
+            } else {
+                tracksAdapter.updateTracks(placeholderTracks)
+            }
         }
 
         clearQueryButton.setOnClickListener {
             inputMethodManager?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
-            searchbar.apply {
+            queryEditText.apply {
                 setText(EMPTY_QUERY)
                 clearFocus()
             }
         }
 
-        searchbarLayout.setOnClickListener {
-            searchbar.requestFocus()
+        searchBarContainer.setOnClickListener {
+            queryEditText.requestFocus()
         }
 
-        backButton.setOnClickListener {
-            finish()
-        }
+        tracksRecyclerView.adapter = tracksAdapter
     }
 
     private companion object {

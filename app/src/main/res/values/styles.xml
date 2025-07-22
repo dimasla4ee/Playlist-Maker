@@ -17,6 +17,10 @@
         <item name="android:textSize">@dimen/text_16</item>
     </style>
 
+    <style name="Text.Regular.11" parent="Text.Regular">
+        <item name="android:textSize">@dimen/text_11</item>
+    </style>
+
     <style name="Text.Medium" parent="Text">
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:fontWeight">@dimen/medium_weight</item>
@@ -67,7 +71,7 @@
 
     <style name="Icon.Setting" parent="Icon">
         <item name="android:layout_marginHorizontal">@dimen/small_150</item>
-        <item name="layout_constraintRight_toRightOf">parent</item>
+        <item name="layout_constraintRight_toRightOf">@id/none</item>
         <item name="layout_constraintTop_toTopOf">parent</item>
         <item name="layout_constraintBottom_toBottomOf">parent</item>
         <item name="android:tint">?attr/colorOnSurfaceVariant</item>
