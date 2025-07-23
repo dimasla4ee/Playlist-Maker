@@ -60,6 +60,19 @@
         <item name="android:backgroundTint">?attr/colorSurfaceContainerHighest</item>
     </style>
 
+
+    <!-- Weight styles -->
+    <style name="Weight" />
+
+    <style name="Weight.Horizontal" parent="Weight">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="Weight.Horizontal.1" parent="Weight.Horizontal">
+        <item name="android:layout_weight">1</item>
+    </style>
+
     <!-- Constraint Layout styles -->
     <style name="ConstraintLayout" />
 

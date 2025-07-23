@@ -10,6 +10,7 @@
 
     <dimen name="big_100">32dp</dimen>
     <dimen name="big_150">48dp</dimen>
+    <dimen name="big_325">104dp</dimen>
 
     <dimen name="panel_header_height">56dp</dimen>
     <dimen name="setting_height">61dp</dimen>

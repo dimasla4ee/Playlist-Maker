@@ -57,25 +57,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="102dp"
+        android:layout_marginTop="@dimen/big_325"
         android:orientation="horizontal">
 
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+        <Space style="@style/Weight.Horizontal.1" />
 
         <ImageView
             android:id="@+id/resultImage"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            style="@style/Weight.Horizontal.1"
             android:importantForAccessibility="no" />
 
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+        <Space style="@style/Weight.Horizontal.1" />
     </LinearLayout>
 
     <TextView
@@ -91,8 +83,5 @@
     <Button
         android:id="@+id/reloadButton"
         style="@style/Button.Common"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="@string/reload" />
 </LinearLayout>
-
