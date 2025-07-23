@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/LinearLayout">
+    style="@style/LinearLayout"
+    android:gravity="center_horizontal">
 
     <LinearLayout style="@style/LinearLayout.PanelHeader">
 
@@ -31,7 +32,9 @@
             style="@style/EditText.SearchBar"
             android:autofillHints="none"
             android:hint="@string/search"
+            android:imeOptions="actionSearch"
             android:inputType="textAutoComplete"
+            android:singleLine="true"
             android:textSize="@dimen/text_16" />
 
         <ImageView
@@ -48,4 +51,46 @@
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/normal_100"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="102dp"
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/resultImage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:importantForAccessibility="no" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/resultMessage"
+        style="@style/Text.Medium.19"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="@dimen/normal_150"
+        android:layout_marginTop="@dimen/normal_100"
+        android:layout_marginBottom="@dimen/normal_150"
+        android:maxLines="4"
+        android:textAlignment="center" />
+
+    <Button
+        style="@style/Button.Common"
+        android:id="@+id/reloadButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reload" />
 </LinearLayout>
+

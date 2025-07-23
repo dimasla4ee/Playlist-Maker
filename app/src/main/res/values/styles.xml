@@ -1,48 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Text styles -->
-    <style name="Text">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:fontFamily">@font/ys_display_regular</item>
-        <item name="android:textColor">?attr/colorOnSurface</item>
-    </style>
-
-    <style name="Text.Regular" parent="Text">
-        <item name="android:fontFamily">@font/ys_display_regular</item>
-        <item name="android:fontWeight">@dimen/regular_weight</item>
-    </style>
-
-    <style name="Text.Regular.16" parent="Text.Regular">
-        <item name="android:textSize">@dimen/text_16</item>
-    </style>
-
-    <style name="Text.Regular.11" parent="Text.Regular">
-        <item name="android:textSize">@dimen/text_11</item>
-    </style>
-
-    <style name="Text.Medium" parent="Text">
-        <item name="android:fontFamily">@font/ys_display_medium</item>
-        <item name="android:fontWeight">@dimen/medium_weight</item>
-    </style>
-
-    <style name="Text.Medium.22" parent="Text.Medium">
-        <item name="android:textSize">@dimen/text_22</item>
-    </style>
-
-    <style name="Text.PanelHeader" parent="Text.Medium.22">
-        <item name="android:layout_marginTop">@dimen/small_125</item>
-        <item name="android:layout_marginBottom">@dimen/small_150</item>
-        <item name="android:layout_marginStart">@dimen/small_150</item>
-        <item name="android:layout_marginEnd">@dimen/small_150</item>
-    </style>
-
-    <style name="Text.Setting" parent="Text.Regular.16">
-        <item name="android:layout_marginHorizontal">@dimen/normal_100</item>
-        <item name="layout_constraintLeft_toLeftOf">parent</item>
-        <item name="layout_constraintTop_toTopOf">parent</item>
-        <item name="layout_constraintBottom_toBottomOf">parent</item>
-    </style>
 
     <!-- EditText styles -->
     <style name="EditText">
@@ -60,33 +17,6 @@
         <item name="android:textColorHint">?attr/colorOnPrimaryContainer</item>
         <item name="android:textAppearance">@style/Text.Regular.16</item>
         <item name="android:textColor">?attr/colorOnPrimaryFixed</item>
-    </style>
-
-    <!-- Icon styles -->
-    <style name="Icon">
-        <item name="android:layout_width">@dimen/normal_150</item>
-        <item name="android:layout_height">@dimen/normal_150</item>
-        <item name="android:backgroundTint">@color/transparent</item>
-    </style>
-
-    <style name="Icon.Setting" parent="Icon">
-        <item name="android:layout_marginHorizontal">@dimen/small_150</item>
-        <item name="layout_constraintRight_toRightOf">@id/none</item>
-        <item name="layout_constraintTop_toTopOf">parent</item>
-        <item name="layout_constraintBottom_toBottomOf">parent</item>
-        <item name="android:tint">?attr/colorOnSurfaceVariant</item>
-    </style>
-
-    <style name="Icon.PanelHeader" parent="Icon">
-        <item name="android:layout_width">@dimen/big_150</item>
-        <item name="android:layout_height">@dimen/big_150</item>
-        <item name="tint">?attr/colorOnSurface</item>
-    </style>
-
-    <style name="Icon.SearchBar" parent="Icon">
-        <item name="android:layout_width">@dimen/normal_100</item>
-        <item name="android:layout_height">@dimen/normal_100</item>
-        <item name="android:tint">?attr/colorOnPrimaryContainer</item>
     </style>
 
     <!-- Switch styles -->
@@ -133,24 +63,5 @@
         <item name="android:orientation">horizontal</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
-    </style>
-
-    <!--  Button styles  -->
-    <style name="Button" parent="Widget.Material3.Button.UnelevatedButton" />
-
-    <style name="Button.MainScreen" parent="Button">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">0dp</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:layout_marginHorizontal">@dimen/normal_100</item>
-        <item name="android:layout_marginVertical">@dimen/small_100</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="cornerRadius">@dimen/normal_100</item>
-        <item name="android:backgroundTint">?attr/colorPrimaryFixed</item>
-        <item name="iconGravity">textStart</item>
-        <item name="iconPadding">@dimen/small_100</item>
-        <item name="iconTint">?attr/colorOnPrimaryFixed</item>
-        <item name="android:textColor">?attr/colorOnPrimaryFixed</item>
-        <item name="android:textAppearance">@style/Text.Medium.22</item>
     </style>
 </resources>
