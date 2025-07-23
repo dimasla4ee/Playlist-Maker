@@ -9,7 +9,7 @@
 
     <style name="Icon.Setting" parent="Icon">
         <item name="android:layout_marginHorizontal">@dimen/small_150</item>
-        <item name="layout_constraintRight_toRightOf">@id/none</item>
+        <item name="layout_constraintRight_toRightOf">parent</item>
         <item name="layout_constraintTop_toTopOf">parent</item>
         <item name="layout_constraintBottom_toBottomOf">parent</item>
         <item name="android:tint">?attr/colorOnSurfaceVariant</item>

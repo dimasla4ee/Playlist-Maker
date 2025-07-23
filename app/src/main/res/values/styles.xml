@@ -22,9 +22,15 @@
     <!-- Switch styles -->
     <style name="Switch" />
 
-    <style name="Switch.Setting" parent="Icon.Setting">
+    <style name="Switch.Setting" parent="TextAppearance.AppCompat.Widget.Switch">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="thumbTint">@color/switch_thumb_state</item>
+        <item name="trackTint">@color/switch_track_state</item>
+        <item name="android:layout_marginHorizontal">@dimen/small_150</item>
+        <item name="layout_constraintRight_toRightOf">parent</item>
+        <item name="layout_constraintTop_toTopOf">parent</item>
+        <item name="layout_constraintBottom_toBottomOf">parent</item>
     </style>
 
     <!-- LinearLayout styles -->
