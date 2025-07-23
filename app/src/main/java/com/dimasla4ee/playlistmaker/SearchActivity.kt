@@ -73,6 +73,10 @@ class SearchActivity : AppCompatActivity() {
             doOnTextChanged { text, _, _, _ ->
                 clearQueryButton.visibility = if (text.isNullOrEmpty()) GONE else VISIBLE
                 query = text?.toString() ?: EMPTY_QUERY
+                if (query.isEmpty()) {
+                    tracksAdapter.updateTracks(emptyList())
+                    setContent(ContentType.TRACKLIST)
+                }
             }
 
             setOnEditorActionListener { _, actionId, _ ->
@@ -93,8 +97,6 @@ class SearchActivity : AppCompatActivity() {
             inputMethodManager?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
             queryEditText.apply {
                 setText(EMPTY_QUERY)
-                setContent(ContentType.TRACKLIST)
-                tracksAdapter.updateTracks(emptyList())
                 clearFocus()
             }
         }
