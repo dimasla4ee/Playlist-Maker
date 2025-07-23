@@ -50,6 +50,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/normal_100"
+        android:clipToPadding="false"
+        android:paddingBottom="?attr/actionBarSize"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <LinearLayout
@@ -87,8 +89,8 @@
         android:textAlignment="center" />
 
     <Button
-        style="@style/Button.Common"
         android:id="@+id/reloadButton"
+        style="@style/Button.Common"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/reload" />

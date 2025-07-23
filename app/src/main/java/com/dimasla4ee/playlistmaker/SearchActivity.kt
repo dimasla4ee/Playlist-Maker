@@ -10,7 +10,11 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import com.dimasla4ee.playlistmaker.databinding.ActivitySearchBinding
@@ -62,6 +66,16 @@ class SearchActivity : AppCompatActivity() {
         reloadButton = binding.reloadButton
 
         setContentView(binding.root)
+        enableEdgeToEdge()
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
+            view.updatePadding(
+                top = insets.top,
+                bottom = insets.bottom
+            )
+            windowInsets
+        }
 
         backButton.setOnClickListener {
             finish()
