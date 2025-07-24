@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/LinearLayout">
 
     <LinearLayout style="@style/LinearLayout.PanelHeader">
@@ -27,7 +28,7 @@
             android:text="@string/dark_theme"
             tools:ignore="MissingConstraints" />
 
-        <androidx.appcompat.widget.SwitchCompat
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/darkThemeSwitch"
             style="@style/Switch.Setting"
             tools:ignore="MissingConstraints" />

@@ -27,7 +27,7 @@ class TracksViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         artistAndTime.text = context.getString(
             R.string.artist_and_time,
-            track.artist, track.duration
+            track.artist, track.formatedDuration
         )
 
         Glide.with(itemView)
