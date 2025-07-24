@@ -2,6 +2,7 @@ package com.dimasla4ee.playlistmaker
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.CompoundButton
 import android.widget.ImageButton
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -16,7 +17,8 @@ class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
     private lateinit var backButton: ImageButton
-    private lateinit var toggleThemeSwitch: ConstraintLayout
+    private lateinit var toggleThemeButton: ConstraintLayout
+    private lateinit var toggleThemeSwitch: CompoundButton
     private lateinit var shareAppButton: ConstraintLayout
     private lateinit var contactSupportButton: ConstraintLayout
     private lateinit var userAgreementButton: ConstraintLayout
@@ -26,7 +28,10 @@ class SettingsActivity : AppCompatActivity() {
 
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         backButton = binding.backButton
-        toggleThemeSwitch = binding.darkThemeLayout
+        toggleThemeButton = binding.darkThemeLayout
+        toggleThemeSwitch = binding.darkThemeSwitch.apply {
+            isChecked = (applicationContext as App).darkTheme
+        }
         shareAppButton = binding.shareAppContainer
         contactSupportButton = binding.textSupportContainer
         userAgreementButton = binding.userAgreementContainer
@@ -47,8 +52,12 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
 
-        toggleThemeSwitch.setOnClickListener {
-            binding.darkThemeSwitch.isChecked = !binding.darkThemeSwitch.isChecked
+        toggleThemeButton.setOnClickListener {
+            toggleThemeSwitch.isChecked = !toggleThemeSwitch.isChecked
+        }
+
+        binding.darkThemeSwitch.setOnCheckedChangeListener { _, checked ->
+            (applicationContext as App).switchTheme(checked)
         }
 
         shareAppButton.setOnClickListener {
