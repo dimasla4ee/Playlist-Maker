@@ -1,5 +1,6 @@
 package com.dimasla4ee.playlistmaker
 
+import android.content.Context.MODE_PRIVATE
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -29,6 +30,12 @@ class TracksViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             R.string.artist_and_time,
             track.artist, track.formatedDuration
         )
+
+        trackContainer.setOnClickListener {
+            val sharedPreferences = context.getSharedPreferences("HELLO", MODE_PRIVATE)
+            val searchHistory = SearchHistory(sharedPreferences)
+            searchHistory.add(track)
+        }
 
         Glide.with(itemView)
             .load(track.artworkUrl)

@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 data class Track(
+    @SerializedName("trackId") val id: Int,
     @SerializedName("trackName") val title: String,
     @SerializedName("artistName") val artist: String,
     @SerializedName("trackTimeMillis") val durationInMillis: Long,

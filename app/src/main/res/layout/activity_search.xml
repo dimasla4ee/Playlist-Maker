@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/LinearLayout"
-    android:gravity="center_horizontal">
+    android:gravity="center_horizontal"
+    android:paddingBottom="?attr/actionBarSize">
 
     <LinearLayout style="@style/LinearLayout.PanelHeader">
 
@@ -49,39 +50,73 @@
         android:id="@+id/tracksRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/normal_100"
         android:clipToPadding="false"
         android:paddingBottom="?attr/actionBarSize"
+        android:layout_marginTop="@dimen/normal_100"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <LinearLayout
+        android:id="@+id/historyLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/big_325"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:layout_marginVertical="@dimen/normal_100"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-        <Space style="@style/Weight.Horizontal.1" />
+        <TextView
+            style="@style/Text.Medium.19"
+            android:layout_margin="@dimen/normal_100"
+            android:text="@string/been_searched" />
 
-        <ImageView
-            android:id="@+id/resultImage"
-            style="@style/Weight.Horizontal.1"
-            android:importantForAccessibility="no" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/historyRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-        <Space style="@style/Weight.Horizontal.1" />
+        <Button
+            android:id="@+id/clearHistoryButton"
+            style="@style/Button.Common"
+            android:text="@string/clear_history" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/resultMessage"
-        style="@style/Text.Medium.19"
+    <LinearLayout
+        android:id="@+id/resultLayout"
         android:layout_width="match_parent"
-        android:layout_marginHorizontal="@dimen/normal_150"
-        android:layout_marginTop="@dimen/normal_100"
-        android:layout_marginBottom="@dimen/normal_150"
-        android:maxLines="4"
-        android:textAlignment="center" />
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/reloadButton"
-        style="@style/Button.Common"
-        android:text="@string/reload" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/big_325"
+            android:orientation="horizontal">
+
+            <Space style="@style/Weight.Horizontal.1" />
+
+            <ImageView
+                android:id="@+id/resultImage"
+                style="@style/Weight.Horizontal.1"
+                android:importantForAccessibility="no" />
+
+            <Space style="@style/Weight.Horizontal.1" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/resultMessage"
+            style="@style/Text.Medium.19"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="@dimen/normal_150"
+            android:layout_marginTop="@dimen/normal_100"
+            android:layout_marginBottom="@dimen/normal_150"
+            android:maxLines="4"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/reloadButton"
+            style="@style/Button.Common"
+            android:text="@string/reload" />
+    </LinearLayout>
 </LinearLayout>

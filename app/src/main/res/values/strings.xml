@@ -21,4 +21,6 @@
     <string name="no_results">Nothing found ;(</string>
     <string name="network_error">Network issues\n\nResults were no loaded. Check your Internet connection</string>
     <string name="reload">Reload</string>
+    <string name="been_searched">You\'ve searched</string>
+    <string name="clear_history" >Clear history</string>
 </resources>

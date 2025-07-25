@@ -36,7 +36,11 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var resultMessage: TextView
 
     private lateinit var reloadButton: Button
+    private lateinit var clearHistoryButton: Button
+    private lateinit var historyLayout: LinearLayout
+    private lateinit var resultLayout: LinearLayout
     private lateinit var tracksRecyclerView: RecyclerView
+    private lateinit var historyRecyclerView: RecyclerView
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -64,9 +68,28 @@ class SearchActivity : AppCompatActivity() {
         resultMessage = binding.resultMessage
         tracksRecyclerView = binding.tracksRecyclerView
         reloadButton = binding.reloadButton
+        clearHistoryButton = binding.clearHistoryButton
+        historyLayout = binding.historyLayout
+        resultLayout = binding.resultLayout
+        historyRecyclerView = binding.historyRecyclerView
 
         setContentView(binding.root)
         enableEdgeToEdge()
+        setContent(ContentType.NONE)
+
+        val sharedPreferences = getSharedPreferences("HELLO", MODE_PRIVATE)
+        val searchHistory = SearchHistory(sharedPreferences)
+        val historyAdapter = TracksAdapter(searchHistory.get())
+
+        historyRecyclerView.adapter = historyAdapter
+        sharedPreferences.registerOnSharedPreferenceChangeListener { sharedPreferences, key ->
+            historyAdapter.updateTracks(searchHistory.get())
+        }
+
+        clearHistoryButton.setOnClickListener {
+            searchHistory.removeAll()
+            setContent(ContentType.NONE)
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
@@ -97,6 +120,8 @@ class SearchActivity : AppCompatActivity() {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     inputMethodManager?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
 
+                    setContent(ContentType.TRACKLIST)
+
                     scope.launch {
                         getSongs(tracksAdapter)
                     }
@@ -112,11 +137,19 @@ class SearchActivity : AppCompatActivity() {
             queryEditText.apply {
                 setText(EMPTY_QUERY)
                 clearFocus()
+                setContent(ContentType.NONE)
+                historyAdapter.updateTracks(searchHistory.get())
             }
         }
 
         searchBarContainer.setOnClickListener {
             queryEditText.requestFocus()
+        }
+
+        queryEditText.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus && query.isEmpty() && searchHistory.get().isNotEmpty()) {
+                setContent(ContentType.SEARCH_HISTORY)
+            }
         }
 
         reloadButton.setOnClickListener {
@@ -134,7 +167,7 @@ class SearchActivity : AppCompatActivity() {
 
                 val contentType = when {
                     response.code() != 200 -> ContentType.ERROR
-                    responseBody?.resultCount == 0 -> ContentType.NONE
+                    responseBody?.resultCount == 0 -> ContentType.NO_RESULTS
                     else -> ContentType.TRACKLIST
                 }
                 setContent(contentType)
@@ -149,22 +182,29 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setContent(contentType: ContentType) {
-        if (contentType == ContentType.TRACKLIST) {
-            tracksRecyclerView.visibility = VISIBLE
-        } else {
-            tracksRecyclerView.visibility = GONE
+        historyLayout.visibility = setVisibility(contentType == ContentType.SEARCH_HISTORY)
+        tracksRecyclerView.visibility = setVisibility(contentType == ContentType.TRACKLIST)
+
+        if (contentType == ContentType.NO_RESULTS || contentType == ContentType.ERROR) {
+            resultLayout.visibility = VISIBLE
             resultImage.setImageResource(contentType.res!!)
             resultMessage.setText(contentType.text!!)
-            reloadButton.visibility = if (contentType == ContentType.ERROR) VISIBLE else GONE
+            reloadButton.visibility = setVisibility(contentType == ContentType.ERROR)
+        } else {
+            resultLayout.visibility = GONE
         }
     }
+
+    private fun setVisibility(isVisible: Boolean): Int = if (isVisible) VISIBLE else GONE
 
     enum class ContentType(
         val res: Int?,
         val text: Int?
     ) {
+        NONE(null, null),
+        SEARCH_HISTORY(null, null),
         TRACKLIST(null, null),
-        NONE(R.drawable.ic_nothing_found_120, R.string.no_results),
+        NO_RESULTS(R.drawable.ic_nothing_found_120, R.string.no_results),
         ERROR(R.drawable.ic_no_internet_120, R.string.network_error)
     }
 
