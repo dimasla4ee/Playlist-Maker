@@ -9,87 +9,56 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.core.widget.doOnTextChanged
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.dimasla4ee.playlistmaker.databinding.ActivitySearchBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SearchActivity : AppCompatActivity() {
 
-    private var query: String = EMPTY_QUERY
-    private var tracks = mutableListOf<Track>()
-
     private lateinit var binding: ActivitySearchBinding
-    private lateinit var searchBarContainer: LinearLayout
     private lateinit var queryEditText: EditText
     private lateinit var clearQueryButton: ImageView
-    private lateinit var backButton: ImageView
-    private lateinit var resultImage: ImageView
-    private lateinit var resultMessage: TextView
-
     private lateinit var reloadButton: Button
-    private lateinit var clearHistoryButton: Button
-    private lateinit var historyLayout: LinearLayout
     private lateinit var resultLayout: LinearLayout
     private lateinit var tracksRecyclerView: RecyclerView
-    private lateinit var historyRecyclerView: RecyclerView
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(QUERY_KEY, query)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        query = savedInstanceState.getString(QUERY_KEY, EMPTY_QUERY)
-    }
+    private var query: String = EMPTY_QUERY
+    private var tracks = mutableListOf<Track>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val tracksAdapter = TracksAdapter(tracks)
-        val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
-        val scope = CoroutineScope(Dispatchers.Main)
-
         binding = ActivitySearchBinding.inflate(layoutInflater)
-        searchBarContainer = binding.searchBar
-        queryEditText = binding.searchBarEditText
-        clearQueryButton = binding.clearSearchBarButton
-        backButton = binding.backButton
-        resultImage = binding.resultImage
-        resultMessage = binding.resultMessage
-        tracksRecyclerView = binding.tracksRecyclerView
-        reloadButton = binding.reloadButton
-        clearHistoryButton = binding.clearHistoryButton
-        historyLayout = binding.historyLayout
-        resultLayout = binding.resultLayout
-        historyRecyclerView = binding.historyRecyclerView
-
         setContentView(binding.root)
         enableEdgeToEdge()
-        setContent(ContentType.NONE)
+
+        queryEditText = binding.searchBarEditText
+        clearQueryButton = binding.clearSearchBarButton
+        tracksRecyclerView = binding.tracksRecyclerView
+        reloadButton = binding.reloadButton
+        resultLayout = binding.resultLayout
 
         val sharedPreferences = getSharedPreferences("HELLO", MODE_PRIVATE)
         val searchHistory = SearchHistory(sharedPreferences)
-        val historyAdapter = TracksAdapter(searchHistory.get())
-
-        historyRecyclerView.adapter = historyAdapter
-        sharedPreferences.registerOnSharedPreferenceChangeListener { sharedPreferences, key ->
-            historyAdapter.updateTracks(searchHistory.get())
+        val historyAdapter = TracksAdapter(searchHistory.get()) { track ->
+            searchHistory.add(track)
         }
-
-        clearHistoryButton.setOnClickListener {
-            searchHistory.removeAll()
-            setContent(ContentType.NONE)
+        val tracksAdapter = TracksAdapter(tracks) { track ->
+            searchHistory.add(track)
         }
+        val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+
+        setContent(ContentType.NONE)
+
+        binding.historyRecyclerView.adapter = historyAdapter
+        tracksRecyclerView.adapter = tracksAdapter
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
@@ -100,7 +69,16 @@ class SearchActivity : AppCompatActivity() {
             windowInsets
         }
 
-        backButton.setOnClickListener {
+        sharedPreferences.registerOnSharedPreferenceChangeListener { _, _ ->
+            historyAdapter.updateTracks(searchHistory.get())
+        }
+
+        binding.clearHistoryButton.setOnClickListener {
+            searchHistory.clear()
+            setContent(ContentType.NONE)
+        }
+
+        binding.backButton.setOnClickListener {
             finish()
         }
 
@@ -112,6 +90,9 @@ class SearchActivity : AppCompatActivity() {
                 query = text?.toString() ?: EMPTY_QUERY
                 if (query.isEmpty()) {
                     tracksAdapter.updateTracks(emptyList())
+                    setContent(ContentType.SEARCH_HISTORY)
+                    historyAdapter.updateTracks(searchHistory.get())
+                } else {
                     setContent(ContentType.TRACKLIST)
                 }
             }
@@ -122,7 +103,7 @@ class SearchActivity : AppCompatActivity() {
 
                     setContent(ContentType.TRACKLIST)
 
-                    scope.launch {
+                    lifecycleScope.launch {
                         getSongs(tracksAdapter)
                     }
 
@@ -138,25 +119,36 @@ class SearchActivity : AppCompatActivity() {
                 setText(EMPTY_QUERY)
                 clearFocus()
                 setContent(ContentType.NONE)
-                historyAdapter.updateTracks(searchHistory.get())
             }
         }
 
-        searchBarContainer.setOnClickListener {
+        binding.searchBar.setOnClickListener {
             queryEditText.requestFocus()
         }
 
         queryEditText.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus && query.isEmpty() && searchHistory.get().isNotEmpty()) {
                 setContent(ContentType.SEARCH_HISTORY)
+                historyAdapter.updateTracks(searchHistory.get())
             }
         }
 
         reloadButton.setOnClickListener {
-            scope.launch { getSongs(tracksAdapter) }
+            lifecycleScope.launch {
+                getSongs(tracksAdapter)
+            }
         }
 
-        tracksRecyclerView.adapter = tracksAdapter
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(QUERY_KEY, query)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        query = savedInstanceState.getString(QUERY_KEY, EMPTY_QUERY)
     }
 
     private suspend fun getSongs(tracksAdapter: TracksAdapter) {
@@ -182,13 +174,13 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setContent(contentType: ContentType) {
-        historyLayout.visibility = setVisibility(contentType == ContentType.SEARCH_HISTORY)
+        binding.historyLayout.visibility = setVisibility(contentType == ContentType.SEARCH_HISTORY)
         tracksRecyclerView.visibility = setVisibility(contentType == ContentType.TRACKLIST)
 
         if (contentType == ContentType.NO_RESULTS || contentType == ContentType.ERROR) {
             resultLayout.visibility = VISIBLE
-            resultImage.setImageResource(contentType.res!!)
-            resultMessage.setText(contentType.text!!)
+            binding.resultImage.setImageResource(contentType.res!!)
+            binding.resultMessage.setText(contentType.text!!)
             reloadButton.visibility = setVisibility(contentType == ContentType.ERROR)
         } else {
             resultLayout.visibility = GONE
@@ -213,3 +205,8 @@ class SearchActivity : AppCompatActivity() {
         const val QUERY_KEY = "QUERY_KEY"
     }
 }
+
+//TODO: трек поднимается при нажатии на него в HISTORY_SEARCH
+//TODO: перемещение трека через notifyItemChanged()
+//TODO: left right insets
+//TODO: keyboard move layout

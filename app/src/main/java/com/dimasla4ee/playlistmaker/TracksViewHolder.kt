@@ -1,6 +1,5 @@
 package com.dimasla4ee.playlistmaker
 
-import android.content.Context.MODE_PRIVATE
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -10,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 
-class TracksViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class TracksViewHolder(
+    itemView: View
+) : RecyclerView.ViewHolder(itemView) {
 
     private val context = itemView.context
     private val trackContainer: LinearLayout = itemView.findViewById(R.id.trackContainer)
@@ -18,7 +19,10 @@ class TracksViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val artistAndTime: TextView = itemView.findViewById(R.id.artistAndTimeTextView)
     private val albumCover: ImageView = itemView.findViewById(R.id.albumCover)
 
-    fun bind(track: Track) {
+    fun bind(
+        track: Track,
+        onItemClick: (Track) -> Unit
+    ) {
         val radius = IMAGE_CORNER_RADIUS.dpToPx(context).toInt()
         val placeholder = AppCompatResources.getDrawable(context, R.drawable.ic_placeholder_45)
 
@@ -32,9 +36,7 @@ class TracksViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         )
 
         trackContainer.setOnClickListener {
-            val sharedPreferences = context.getSharedPreferences("HELLO", MODE_PRIVATE)
-            val searchHistory = SearchHistory(sharedPreferences)
-            searchHistory.add(track)
+            onItemClick(track)
         }
 
         Glide.with(itemView)

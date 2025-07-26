@@ -7,50 +7,51 @@ import com.google.gson.Gson
 class SearchHistory(
     private val sharedPreferences: SharedPreferences
 ) {
-    private lateinit var savedTracks: MutableList<Track>
+    private val gson = Gson()
+    private var savedTracks: ArrayDeque<Track> = ArrayDeque()
 
     init {
-        get()
+        val json = sharedPreferences.getString(PreferenceKeys.SEARCH_HISTORY, "")
+        val array = gson.fromJson(json, Array<Track>::class.java) ?: emptyArray()
+        savedTracks.addAll(array)
     }
 
-    fun get(): List<Track> {
-        val json = sharedPreferences.getString(SEARCH_HISTORY_KEY, "")
-        val array = Gson().fromJson(json, Array<Track>::class.java)
-        savedTracks = array?.toMutableList() ?: mutableListOf()
-        return savedTracks
-    }
+    fun get(): List<Track> = savedTracks
 
-    fun removeAll() {
+    fun clear() {
         if (savedTracks.isEmpty()) return
 
         savedTracks.clear()
-        val json = Gson().toJson(savedTracks)
-        sharedPreferences.edit {
-            putString(SEARCH_HISTORY_KEY, json)
-        }
+
+        saveSearchHistoryToPreferences()
     }
 
     fun add(newTrack: Track) {
-        if (savedTracks.any { it.id == newTrack.id }) return
+        val duplicateTrackIndex = savedTracks.indexOfFirst { it.id == newTrack.id }
+        val isNewTrackAlreadySaved = duplicateTrackIndex != -1
+        val isMaxCapacityReached = savedTracks.size >= SEARCH_HISTORY_LIMIT
+
+        if (duplicateTrackIndex == 0) return
 
         savedTracks.apply {
-            if (size < SEARCH_HISTORY_LIMIT) {
-                add(newTrack)
-            } else {
-                removeAt(lastIndex)
-                add(0, newTrack)
+            when {
+                isNewTrackAlreadySaved -> removeAt(duplicateTrackIndex)
+                isMaxCapacityReached -> removeLast()
             }
+            addFirst(newTrack)
         }
 
-        val json = Gson().toJson(savedTracks)
+        saveSearchHistoryToPreferences()
+    }
 
+    private fun saveSearchHistoryToPreferences() {
         sharedPreferences.edit {
-            putString(SEARCH_HISTORY_KEY, json)
+            val json = gson.toJson(savedTracks)
+            putString(PreferenceKeys.SEARCH_HISTORY, json)
         }
     }
 
     private companion object {
         const val SEARCH_HISTORY_LIMIT = 10
-        const val SEARCH_HISTORY_KEY = "HISTORY_KEY"
     }
 }
