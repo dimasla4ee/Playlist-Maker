@@ -8,9 +8,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.net.toUri
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import com.dimasla4ee.playlistmaker.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
@@ -39,14 +36,7 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(binding.root)
         enableEdgeToEdge()
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
-            view.updatePadding(
-                top = insets.top,
-                bottom = insets.bottom
-            )
-            windowInsets
-        }
+        setupWindowInsets(binding.root)
 
         backButton.setOnClickListener {
             finish()

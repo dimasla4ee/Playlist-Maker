@@ -50,16 +50,17 @@
         android:id="@+id/tracksRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/normal_100"
         android:clipToPadding="false"
         android:paddingBottom="?attr/actionBarSize"
-        android:layout_marginTop="@dimen/normal_100"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <LinearLayout
         android:id="@+id/historyLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/normal_100"
+        android:clipToPadding="false"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
@@ -71,7 +72,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/historyRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:clipToPadding="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 

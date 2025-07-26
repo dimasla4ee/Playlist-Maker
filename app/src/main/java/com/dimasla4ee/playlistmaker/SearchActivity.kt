@@ -11,9 +11,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +25,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var reloadButton: Button
     private lateinit var resultLayout: LinearLayout
     private lateinit var tracksRecyclerView: RecyclerView
+    private lateinit var historyAdapter: TracksAdapter
 
     private var query: String = EMPTY_QUERY
     private var tracks = mutableListOf<Track>()
@@ -47,8 +45,9 @@ class SearchActivity : AppCompatActivity() {
 
         val sharedPreferences = getSharedPreferences("HELLO", MODE_PRIVATE)
         val searchHistory = SearchHistory(sharedPreferences)
-        val historyAdapter = TracksAdapter(searchHistory.get()) { track ->
+        historyAdapter = TracksAdapter(searchHistory.get()) { track ->
             searchHistory.add(track)
+            historyAdapter.updateTracks(searchHistory.get())
         }
         val tracksAdapter = TracksAdapter(tracks) { track ->
             searchHistory.add(track)
@@ -60,14 +59,7 @@ class SearchActivity : AppCompatActivity() {
         binding.historyRecyclerView.adapter = historyAdapter
         tracksRecyclerView.adapter = tracksAdapter
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
-            view.updatePadding(
-                top = insets.top,
-                bottom = insets.bottom
-            )
-            windowInsets
-        }
+        setupWindowInsets(binding.root)
 
         sharedPreferences.registerOnSharedPreferenceChangeListener { _, _ ->
             historyAdapter.updateTracks(searchHistory.get())
@@ -205,8 +197,3 @@ class SearchActivity : AppCompatActivity() {
         const val QUERY_KEY = "QUERY_KEY"
     }
 }
-
-//TODO: трек поднимается при нажатии на него в HISTORY_SEARCH
-//TODO: перемещение трека через notifyItemChanged()
-//TODO: left right insets
-//TODO: keyboard move layout
