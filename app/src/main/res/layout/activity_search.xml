@@ -2,44 +2,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/LinearLayout"
-    android:gravity="center_horizontal"
-    android:paddingBottom="?attr/actionBarSize">
+    android:gravity="center_horizontal">
 
+    <!-- Header -->
     <LinearLayout style="@style/LinearLayout.PanelHeader">
 
         <ImageButton
-            android:id="@+id/backButton"
+            android:id="@+id/headerBackButton"
             style="@style/Icon.PanelHeader"
             android:contentDescription="@string/back"
             android:src="@drawable/ic_arrow_back_24" />
 
         <TextView
-            android:id="@+id/searchTextView"
+            android:id="@+id/headerTitleTextView"
             style="@style/Text.PanelHeader"
             android:text="@string/search" />
     </LinearLayout>
 
+    <!-- SearchBar -->
     <LinearLayout
-        android:id="@+id/searchBar"
+        android:id="@+id/searchBarContainerLayout"
         style="@style/LinearLayout.Searchbar">
 
         <ImageView
             style="@style/Icon.SearchBar"
-            android:contentDescription="@string/search"
+            android:importantForAccessibility="no"
             android:src="@drawable/ic_search_24" />
 
         <EditText
-            android:id="@+id/searchBarEditText"
+            android:id="@+id/searchInputEditText"
             style="@style/EditText.SearchBar"
+            android:layout_height="48dp"
             android:autofillHints="none"
-            android:hint="@string/search"
+            android:hint="@string/searchbar_hint"
             android:imeOptions="actionSearch"
             android:inputType="textAutoComplete"
             android:singleLine="true"
             android:textSize="@dimen/text_16" />
 
         <ImageView
-            android:id="@+id/clearSearchBarButton"
+            android:id="@+id/searchInputClearButton"
             style="@style/Icon.SearchBar"
             android:contentDescription="@string/clear"
             android:src="@drawable/ic_clear_24"
@@ -47,7 +49,7 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/tracksRecyclerView"
+        android:id="@+id/searchResultsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/normal_100"
@@ -56,7 +58,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <LinearLayout
-        android:id="@+id/historyLayout"
+        android:id="@+id/searchHistoryLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/normal_100"
@@ -70,7 +72,7 @@
             android:text="@string/been_searched" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/historyRecyclerView"
+            android:id="@+id/searchHistoryRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -78,13 +80,13 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <Button
-            android:id="@+id/clearHistoryButton"
+            android:id="@+id/searchHistoryClearButton"
             style="@style/Button.Common"
             android:text="@string/clear_history" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/resultLayout"
+        android:id="@+id/searchStatusLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
@@ -99,7 +101,7 @@
             <Space style="@style/Weight.Horizontal.1" />
 
             <ImageView
-                android:id="@+id/resultImage"
+                android:id="@+id/searchStatusImageView"
                 style="@style/Weight.Horizontal.1"
                 android:importantForAccessibility="no" />
 
@@ -107,7 +109,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/resultMessage"
+            android:id="@+id/searchStatusTextView"
             style="@style/Text.Medium.19"
             android:layout_width="match_parent"
             android:layout_marginHorizontal="@dimen/normal_150"
@@ -117,7 +119,7 @@
             android:textAlignment="center" />
 
         <Button
-            android:id="@+id/reloadButton"
+            android:id="@+id/searchStatusReloadButton"
             style="@style/Button.Common"
             android:text="@string/reload" />
     </LinearLayout>

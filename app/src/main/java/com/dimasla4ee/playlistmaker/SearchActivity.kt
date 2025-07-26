@@ -1,34 +1,28 @@
 package com.dimasla4ee.playlistmaker
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
 import com.dimasla4ee.playlistmaker.databinding.ActivitySearchBinding
 import kotlinx.coroutines.launch
 
 class SearchActivity : AppCompatActivity() {
 
+    private lateinit var prefs: SharedPreferences
     private lateinit var binding: ActivitySearchBinding
-    private lateinit var queryEditText: EditText
-    private lateinit var clearQueryButton: ImageView
-    private lateinit var reloadButton: Button
-    private lateinit var resultLayout: LinearLayout
-    private lateinit var tracksRecyclerView: RecyclerView
-    private lateinit var historyAdapter: TracksAdapter
+    private lateinit var searchInputEditText: EditText
+    private lateinit var searchHistoryAdapter: TracksAdapter
 
     private var query: String = EMPTY_QUERY
-    private var tracks = mutableListOf<Track>()
+    private var searchResults = mutableListOf<Track>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,100 +31,26 @@ class SearchActivity : AppCompatActivity() {
         setContentView(binding.root)
         enableEdgeToEdge()
 
-        queryEditText = binding.searchBarEditText
-        clearQueryButton = binding.clearSearchBarButton
-        tracksRecyclerView = binding.tracksRecyclerView
-        reloadButton = binding.reloadButton
-        resultLayout = binding.resultLayout
+        searchInputEditText = binding.searchInputEditText
 
-        val sharedPreferences = getSharedPreferences("HELLO", MODE_PRIVATE)
-        val searchHistory = SearchHistory(sharedPreferences)
-        historyAdapter = TracksAdapter(searchHistory.get()) { track ->
+        prefs = getSharedPreferences(PreferenceKeys.SEARCH_PREFERENCES, MODE_PRIVATE)
+        val searchHistory = SearchHistory(prefs)
+        searchHistoryAdapter = TracksAdapter(searchHistory.get()) { track ->
             searchHistory.add(track)
-            historyAdapter.updateTracks(searchHistory.get())
+            searchHistoryAdapter.updateTracks(searchHistory.get())
         }
-        val tracksAdapter = TracksAdapter(tracks) { track ->
+        val searchResultsAdapter = TracksAdapter(searchResults) { track ->
             searchHistory.add(track)
         }
-        val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
 
         setContent(ContentType.NONE)
+        searchInputEditText.setText(query)
 
-        binding.historyRecyclerView.adapter = historyAdapter
-        tracksRecyclerView.adapter = tracksAdapter
+        binding.searchHistoryRecyclerView.adapter = searchHistoryAdapter
+        binding.searchResultsRecyclerView.adapter = searchResultsAdapter
 
         setupWindowInsets(binding.root)
-
-        sharedPreferences.registerOnSharedPreferenceChangeListener { _, _ ->
-            historyAdapter.updateTracks(searchHistory.get())
-        }
-
-        binding.clearHistoryButton.setOnClickListener {
-            searchHistory.clear()
-            setContent(ContentType.NONE)
-        }
-
-        binding.backButton.setOnClickListener {
-            finish()
-        }
-
-        queryEditText.apply {
-            setText(query)
-
-            doOnTextChanged { text, _, _, _ ->
-                clearQueryButton.visibility = if (text.isNullOrEmpty()) GONE else VISIBLE
-                query = text?.toString() ?: EMPTY_QUERY
-                if (query.isEmpty()) {
-                    tracksAdapter.updateTracks(emptyList())
-                    setContent(ContentType.SEARCH_HISTORY)
-                    historyAdapter.updateTracks(searchHistory.get())
-                } else {
-                    setContent(ContentType.TRACKLIST)
-                }
-            }
-
-            setOnEditorActionListener { _, actionId, _ ->
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    inputMethodManager?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
-
-                    setContent(ContentType.TRACKLIST)
-
-                    lifecycleScope.launch {
-                        getSongs(tracksAdapter)
-                    }
-
-                    true
-                }
-                false
-            }
-        }
-
-        clearQueryButton.setOnClickListener {
-            inputMethodManager?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
-            queryEditText.apply {
-                setText(EMPTY_QUERY)
-                clearFocus()
-                setContent(ContentType.NONE)
-            }
-        }
-
-        binding.searchBar.setOnClickListener {
-            queryEditText.requestFocus()
-        }
-
-        queryEditText.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus && query.isEmpty() && searchHistory.get().isNotEmpty()) {
-                setContent(ContentType.SEARCH_HISTORY)
-                historyAdapter.updateTracks(searchHistory.get())
-            }
-        }
-
-        reloadButton.setOnClickListener {
-            lifecycleScope.launch {
-                getSongs(tracksAdapter)
-            }
-        }
-
+        setupListeners(searchHistory, searchResultsAdapter)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -143,7 +63,83 @@ class SearchActivity : AppCompatActivity() {
         query = savedInstanceState.getString(QUERY_KEY, EMPTY_QUERY)
     }
 
-    private suspend fun getSongs(tracksAdapter: TracksAdapter) {
+    private fun setupListeners(
+        searchHistory: SearchHistory,
+        tracksAdapter: TracksAdapter,
+    ) {
+        val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+
+        prefs.registerOnSharedPreferenceChangeListener { _, _ ->
+            searchHistoryAdapter.updateTracks(searchHistory.get())
+        }
+
+        binding.searchHistoryClearButton.setOnClickListener {
+            searchHistory.clear()
+            setContent(ContentType.NONE)
+        }
+
+        binding.headerBackButton.setOnClickListener {
+            finish()
+        }
+
+        searchInputEditText.apply {
+            doOnTextChanged { text, _, _, _ ->
+                binding.searchInputClearButton.visibility = setVisibility(!text.isNullOrEmpty())
+
+                query = text?.toString() ?: EMPTY_QUERY
+                if (query.isEmpty()) {
+                    tracksAdapter.updateTracks(emptyList())
+                    setContent(ContentType.SEARCH_HISTORY)
+                    searchHistoryAdapter.updateTracks(searchHistory.get())
+                } else {
+                    setContent(ContentType.TRACKLIST)
+                }
+            }
+
+            setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus && query.isEmpty() && searchHistory.get().isNotEmpty()) {
+                    setContent(ContentType.SEARCH_HISTORY); searchHistoryAdapter.updateTracks(
+                        searchHistory.get()
+                    )
+                }
+            }
+
+            setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    inputMethodManager?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+                    setContent(ContentType.TRACKLIST)
+                    lifecycleScope.launch {
+                        fetchSongsAndUpdateUi(tracksAdapter)
+                    }
+                    true
+                }
+                false
+            }
+        }
+
+        binding.searchInputClearButton.setOnClickListener {
+            inputMethodManager?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+            searchInputEditText.apply {
+                setText(EMPTY_QUERY)
+                clearFocus()
+                setContent(ContentType.NONE)
+            }
+        }
+
+        binding.searchBarContainerLayout.setOnClickListener {
+            searchInputEditText.requestFocus()
+        }
+
+        binding.searchStatusReloadButton.setOnClickListener {
+            lifecycleScope.launch {
+                fetchSongsAndUpdateUi(
+                    tracksAdapter
+                )
+            }
+        }
+    }
+
+    private suspend fun fetchSongsAndUpdateUi(tracksAdapter: TracksAdapter) {
         ItunesApiClient.getSongs(
             query = query,
             doOnResponse = { _, response ->
@@ -166,16 +162,21 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setContent(contentType: ContentType) {
-        binding.historyLayout.visibility = setVisibility(contentType == ContentType.SEARCH_HISTORY)
-        tracksRecyclerView.visibility = setVisibility(contentType == ContentType.TRACKLIST)
+        binding.searchHistoryRecyclerView.visibility =
+            setVisibility(contentType == ContentType.SEARCH_HISTORY)
+        binding.searchResultsRecyclerView.visibility =
+            setVisibility(contentType == ContentType.TRACKLIST)
 
-        if (contentType == ContentType.NO_RESULTS || contentType == ContentType.ERROR) {
-            resultLayout.visibility = VISIBLE
-            binding.resultImage.setImageResource(contentType.res!!)
-            binding.resultMessage.setText(contentType.text!!)
-            reloadButton.visibility = setVisibility(contentType == ContentType.ERROR)
-        } else {
-            resultLayout.visibility = GONE
+        binding.searchStatusLayout.apply {
+            if (contentType == ContentType.NO_RESULTS || contentType == ContentType.ERROR) {
+                visibility = VISIBLE
+                binding.searchStatusImageView.setImageResource(contentType.res!!)
+                binding.searchStatusTextView.setText(contentType.text!!)
+                binding.searchStatusReloadButton.visibility =
+                    setVisibility(contentType == ContentType.ERROR)
+            } else {
+                visibility = GONE
+            }
         }
     }
 

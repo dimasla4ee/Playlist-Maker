@@ -24,10 +24,10 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivitySettingsBinding.inflate(layoutInflater)
-        backButton = binding.backButton
+        backButton = binding.headerBackButton
         toggleThemeButton = binding.darkThemeLayout
         toggleThemeSwitch = binding.darkThemeSwitch.apply {
-            isChecked = (applicationContext as App).darkTheme
+            isChecked = (applicationContext as App).isDarkThemeEnabled
         }
         shareAppButton = binding.shareAppContainer
         contactSupportButton = binding.textSupportContainer
@@ -47,7 +47,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         binding.darkThemeSwitch.setOnCheckedChangeListener { _, checked ->
-            (applicationContext as App).switchTheme(checked)
+            (applicationContext as App).setAppTheme(checked)
         }
 
         shareAppButton.setOnClickListener {

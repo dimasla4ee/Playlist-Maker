@@ -17,4 +17,5 @@
     <string name="reload">Обновить</string>
     <string name="been_searched">Вы искали</string>
     <string name="clear_history" >Очистить историю</string>
+    <string name="searchbar_hint">Поиск</string>
 </resources>

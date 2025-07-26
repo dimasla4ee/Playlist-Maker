@@ -5,13 +5,13 @@ import androidx.core.content.edit
 import com.google.gson.Gson
 
 class SearchHistory(
-    private val sharedPreferences: SharedPreferences
+    private val prefs: SharedPreferences
 ) {
     private val gson = Gson()
     private var savedTracks: ArrayDeque<Track> = ArrayDeque()
 
     init {
-        val json = sharedPreferences.getString(PreferenceKeys.SEARCH_HISTORY, "")
+        val json = prefs.getString(PreferenceKeys.Keys.SEARCH_HISTORY, null)
         val array = gson.fromJson(json, Array<Track>::class.java) ?: emptyArray()
         savedTracks.addAll(array)
     }
@@ -45,9 +45,9 @@ class SearchHistory(
     }
 
     private fun saveSearchHistoryToPreferences() {
-        sharedPreferences.edit {
+        prefs.edit {
             val json = gson.toJson(savedTracks)
-            putString(PreferenceKeys.SEARCH_HISTORY, json)
+            putString(PreferenceKeys.Keys.SEARCH_HISTORY, json)
         }
     }
 
