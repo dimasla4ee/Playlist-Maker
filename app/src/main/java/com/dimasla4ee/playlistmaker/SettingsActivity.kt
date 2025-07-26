@@ -2,21 +2,20 @@ package com.dimasla4ee.playlistmaker
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.CompoundButton
 import android.widget.ImageButton
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.net.toUri
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import com.dimasla4ee.playlistmaker.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
     private lateinit var backButton: ImageButton
-    private lateinit var toggleThemeSwitch: ConstraintLayout
+    private lateinit var toggleThemeButton: ConstraintLayout
+    private lateinit var toggleThemeSwitch: CompoundButton
     private lateinit var shareAppButton: ConstraintLayout
     private lateinit var contactSupportButton: ConstraintLayout
     private lateinit var userAgreementButton: ConstraintLayout
@@ -25,8 +24,11 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivitySettingsBinding.inflate(layoutInflater)
-        backButton = binding.backButton
-        toggleThemeSwitch = binding.darkThemeLayout
+        backButton = binding.headerBackButton
+        toggleThemeButton = binding.darkThemeLayout
+        toggleThemeSwitch = binding.darkThemeSwitch.apply {
+            isChecked = (applicationContext as App).isDarkThemeEnabled
+        }
         shareAppButton = binding.shareAppContainer
         contactSupportButton = binding.textSupportContainer
         userAgreementButton = binding.userAgreementContainer
@@ -34,21 +36,18 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(binding.root)
         enableEdgeToEdge()
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
-            view.updatePadding(
-                top = insets.top,
-                bottom = insets.bottom
-            )
-            windowInsets
-        }
+        setupWindowInsets(binding.root)
 
         backButton.setOnClickListener {
             finish()
         }
 
-        toggleThemeSwitch.setOnClickListener {
-            binding.darkThemeSwitch.isChecked = !binding.darkThemeSwitch.isChecked
+        toggleThemeButton.setOnClickListener {
+            toggleThemeSwitch.isChecked = !toggleThemeSwitch.isChecked
+        }
+
+        binding.darkThemeSwitch.setOnCheckedChangeListener { _, checked ->
+            (applicationContext as App).setAppTheme(checked)
         }
 
         shareAppButton.setOnClickListener {

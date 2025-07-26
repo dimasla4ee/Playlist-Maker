@@ -7,7 +7,7 @@
     <LinearLayout style="@style/LinearLayout.PanelHeader">
 
         <ImageButton
-            android:id="@+id/backButton"
+            android:id="@+id/headerBackButton"
             style="@style/Icon.PanelHeader"
             android:contentDescription="@string/back"
             android:src="@drawable/ic_arrow_back_24" />
