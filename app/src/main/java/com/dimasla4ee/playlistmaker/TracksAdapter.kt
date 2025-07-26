@@ -2,12 +2,12 @@ package com.dimasla4ee.playlistmaker
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 
 class TracksAdapter(
-    private var tracks: List<Track>,
     private val onItemClick: (Track) -> Unit
-) : RecyclerView.Adapter<TracksViewHolder>() {
+) : ListAdapter<Track, TracksViewHolder>(SongsCallback()) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -21,13 +21,20 @@ class TracksAdapter(
         holder: TracksViewHolder,
         position: Int
     ) {
-        holder.bind(tracks[position], onItemClick)
+        val track = getItem(position)
+        holder.bind(track, onItemClick)
     }
+}
 
-    override fun getItemCount(): Int = tracks.size
+class SongsCallback() : DiffUtil.ItemCallback<Track>() {
 
-    fun updateTracks(newTracks: List<Track>) {
-        tracks = newTracks
-        notifyDataSetChanged()
-    }
+    override fun areItemsTheSame(
+        oldItem: Track,
+        newItem: Track
+    ): Boolean = oldItem.id == newItem.id
+
+    override fun areContentsTheSame(
+        oldItem: Track,
+        newItem: Track
+    ): Boolean = oldItem == newItem
 }

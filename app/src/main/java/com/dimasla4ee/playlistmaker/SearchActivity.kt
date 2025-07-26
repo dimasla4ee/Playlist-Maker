@@ -22,7 +22,6 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchHistoryAdapter: TracksAdapter
 
     private var query: String = EMPTY_QUERY
-    private var searchResults = mutableListOf<Track>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,11 +34,11 @@ class SearchActivity : AppCompatActivity() {
 
         prefs = getSharedPreferences(PreferenceKeys.SEARCH_PREFERENCES, MODE_PRIVATE)
         val searchHistory = SearchHistory(prefs)
-        searchHistoryAdapter = TracksAdapter(searchHistory.get()) { track ->
+        searchHistoryAdapter = TracksAdapter { track ->
             searchHistory.add(track)
-            searchHistoryAdapter.updateTracks(searchHistory.get())
+            searchHistoryAdapter.submitList(searchHistory.get())
         }
-        val searchResultsAdapter = TracksAdapter(searchResults) { track ->
+        val searchResultsAdapter = TracksAdapter { track ->
             searchHistory.add(track)
         }
 
@@ -55,12 +54,12 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(QUERY_KEY, query)
+        outState.putString(PreferenceKeys.Keys.SEARCH_QUERY, query)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        query = savedInstanceState.getString(QUERY_KEY, EMPTY_QUERY)
+        query = savedInstanceState.getString(PreferenceKeys.Keys.SEARCH_QUERY, EMPTY_QUERY)
     }
 
     private fun setupListeners(
@@ -70,7 +69,7 @@ class SearchActivity : AppCompatActivity() {
         val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
 
         prefs.registerOnSharedPreferenceChangeListener { _, _ ->
-            searchHistoryAdapter.updateTracks(searchHistory.get())
+            searchHistoryAdapter.submitList(searchHistory.get())
         }
 
         binding.searchHistoryClearButton.setOnClickListener {
@@ -88,9 +87,9 @@ class SearchActivity : AppCompatActivity() {
 
                 query = text?.toString() ?: EMPTY_QUERY
                 if (query.isEmpty()) {
-                    tracksAdapter.updateTracks(emptyList())
+                    tracksAdapter.submitList(emptyList())
                     setContent(ContentType.SEARCH_HISTORY)
-                    searchHistoryAdapter.updateTracks(searchHistory.get())
+                    searchHistoryAdapter.submitList(searchHistory.get())
                 } else {
                     setContent(ContentType.TRACKLIST)
                 }
@@ -98,9 +97,8 @@ class SearchActivity : AppCompatActivity() {
 
             setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus && query.isEmpty() && searchHistory.get().isNotEmpty()) {
-                    setContent(ContentType.SEARCH_HISTORY); searchHistoryAdapter.updateTracks(
-                        searchHistory.get()
-                    )
+                    setContent(ContentType.SEARCH_HISTORY)
+                    searchHistoryAdapter.submitList(searchHistory.get())
                 }
             }
 
@@ -153,7 +151,7 @@ class SearchActivity : AppCompatActivity() {
                 setContent(contentType)
 
                 val loadedTracks = responseBody?.results ?: emptyList()
-                tracksAdapter.updateTracks(loadedTracks)
+                tracksAdapter.submitList(loadedTracks)
             },
             doOnFailure = { _, _ ->
                 setContent(ContentType.ERROR)
@@ -162,7 +160,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setContent(contentType: ContentType) {
-        binding.searchHistoryRecyclerView.visibility =
+        binding.searchHistoryLayout.visibility =
             setVisibility(contentType == ContentType.SEARCH_HISTORY)
         binding.searchResultsRecyclerView.visibility =
             setVisibility(contentType == ContentType.TRACKLIST)
@@ -195,6 +193,5 @@ class SearchActivity : AppCompatActivity() {
 
     private companion object {
         const val EMPTY_QUERY = ""
-        const val QUERY_KEY = "QUERY_KEY"
     }
 }

@@ -16,7 +16,7 @@ class SearchHistory(
         savedTracks.addAll(array)
     }
 
-    fun get(): List<Track> = savedTracks
+    fun get(): List<Track> = savedTracks.toList()
 
     fun clear() {
         if (savedTracks.isEmpty()) return
