@@ -15,16 +15,17 @@ class PlayerActivity : AppCompatActivity() {
     lateinit var binding: ActivityPlayerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
+
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         enableEdgeToEdge()
-
         setupWindowInsets(binding.root)
 
         val json = intent.getStringExtra("song_info")
         val track = Gson().fromJson(json, Track::class.java)
+
+        fillTrackInfo(track)
 
         binding.headerBackButton.setOnClickListener {
             finish()
@@ -32,7 +33,9 @@ class PlayerActivity : AppCompatActivity() {
 
         //TODO: Implement snippets
         binding.songCurrentDuration.text = "0:30"
+    }
 
+    private fun fillTrackInfo(track: Track) {
         binding.songDurationFetched.text = track.formatedDuration
         track.year.let { year ->
             if (year == null) {
@@ -56,7 +59,8 @@ class PlayerActivity : AppCompatActivity() {
         binding.songTitle.text = track.title
         binding.songAuthor.text = track.artist
 
-        val radius = IMAGE_CORNER_RADIUS.dpToPx(this).toInt()
+        val dpRadius = resources.getDimension(R.dimen.small_100)
+        val pxRadius = dpRadius.dpToPx(this).toInt()
         val placeholder = AppCompatResources.getDrawable(this, R.drawable.ic_placeholder_45)
 
         placeholder?.setTint(getColor(R.color.light_gray))
@@ -64,12 +68,8 @@ class PlayerActivity : AppCompatActivity() {
         Glide.with(binding.root)
             .load(track.urlBigArtwork)
             .placeholder(placeholder)
-            .transform(RoundedCorners(radius))
+            .transform(RoundedCorners(pxRadius))
             .fitCenter()
             .into(binding.songCover)
-    }
-
-    private companion object {
-        const val IMAGE_CORNER_RADIUS = 8f
     }
 }

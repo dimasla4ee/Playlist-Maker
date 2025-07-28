@@ -23,7 +23,8 @@ class TracksViewHolder(
         track: Track,
         onItemClick: (Track) -> Unit
     ) {
-        val radius = IMAGE_CORNER_RADIUS.dpToPx(context).toInt()
+        val dpRadius = itemView.resources.getDimension(R.dimen.small_25)
+        val pxRadius = dpRadius.dpToPx(context).toInt()
         val placeholder = AppCompatResources.getDrawable(context, R.drawable.ic_placeholder_45)
 
         placeholder?.setTint(context.getColor(R.color.light_gray))
@@ -42,12 +43,8 @@ class TracksViewHolder(
         Glide.with(itemView)
             .load(track.urlPreviewArtwork)
             .placeholder(placeholder)
-            .transform(RoundedCorners(radius))
+            .transform(RoundedCorners(pxRadius))
             .fitCenter()
             .into(albumCover)
-    }
-
-    companion object {
-        const val IMAGE_CORNER_RADIUS = 2f
     }
 }

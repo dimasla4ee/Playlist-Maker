@@ -33,6 +33,7 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
         enableEdgeToEdge()
+        setupWindowInsets(binding.root)
 
         searchInputEditText = binding.searchInputEditText
 
@@ -47,7 +48,6 @@ class SearchActivity : AppCompatActivity() {
         binding.searchHistoryRecyclerView.adapter = searchHistoryAdapter
         binding.searchResultsRecyclerView.adapter = searchResultsAdapter
 
-        setupWindowInsets(binding.root)
         setupListeners(searchHistory, searchResultsAdapter)
     }
 
