@@ -40,7 +40,7 @@ class TracksViewHolder(
         }
 
         Glide.with(itemView)
-            .load(track.artworkUrl)
+            .load(track.urlPreviewArtwork)
             .placeholder(placeholder)
             .transform(RoundedCorners(radius))
             .fitCenter()

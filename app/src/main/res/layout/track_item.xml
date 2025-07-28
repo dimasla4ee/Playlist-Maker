@@ -24,7 +24,6 @@
             android:id="@+id/titleTextView"
             style="@style/Text.Regular.16"
             android:layout_width="match_parent"
-            android:ellipsize="end"
             android:maxLines="1"
             android:textColor="?attr/colorOnSurface" />
 

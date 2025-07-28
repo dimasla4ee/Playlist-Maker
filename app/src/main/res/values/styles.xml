@@ -74,13 +74,29 @@
     </style>
 
     <!-- Constraint Layout styles -->
-    <style name="ConstraintLayout" />
+    <style name="ConstraintLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
 
     <style name="ConstraintLayout.Setting">
-        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/setting_height</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
+    </style>
+
+    <!-- Guidelines -->
+    <style name="Guideline">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="Guideline.Horizontal" parent="Guideline">
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="Guideline.Vertical" parent="Guideline">
+        <item name="android:orientation">vertical</item>
     </style>
 </resources>

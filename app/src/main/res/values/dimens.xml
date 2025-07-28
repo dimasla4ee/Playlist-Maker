@@ -20,6 +20,7 @@
     <dimen name="medium_weight">500</dimen>
 
     <dimen name="text_11">11sp</dimen>
+    <dimen name="text_13">13sp</dimen>
     <dimen name="text_14">14sp</dimen>
     <dimen name="text_16">16sp</dimen>
     <dimen name="text_19">19sp</dimen>

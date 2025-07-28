@@ -22,6 +22,14 @@
     <string name="network_error">Network issues\n\nResults were no loaded. Check your Internet connection</string>
     <string name="reload">Reload</string>
     <string name="been_searched">You\'ve searched</string>
-    <string name="clear_history" >Clear history</string>
+    <string name="clear_history">Clear history</string>
     <string name="searchbar_hint">Search</string>
+    <string name="play">Play</string>
+    <string name="add_to_playlist">Add to playlist</string>
+    <string name="add_to_favorite">Add to favorite</string>
+    <string name="duration_label">Duration</string>
+    <string name="album_label">Album</string>
+    <string name="year_label">Year</string>
+    <string name="genre_label">Genre</string>
+    <string name="country_label">Country</string>
 </resources>
