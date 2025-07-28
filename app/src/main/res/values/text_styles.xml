@@ -17,6 +17,10 @@
         <item name="android:textSize">@dimen/text_16</item>
     </style>
 
+    <style name="Text.Regular.13" parent="Text.Regular">
+        <item name="android:textSize">@dimen/text_13</item>
+    </style>
+
     <style name="Text.Regular.11" parent="Text.Regular">
         <item name="android:textSize">@dimen/text_11</item>
     </style>
@@ -36,6 +40,24 @@
 
     <style name="Text.Medium.22" parent="Text.Medium">
         <item name="android:textSize">@dimen/text_22</item>
+    </style>
+
+    <!-- SongInfo styles -->
+    <style name="Text.SongInfo" parent="Text.Regular.13">
+        <item name="android:layout_width">0dp</item>
+        <item name="layout_constraintHorizontal_chainStyle">spread_inside</item>
+        <item name="android:paddingVertical">@dimen/small_100</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="Text.SongInfo.Label" parent="Text.SongInfo">
+        <item name="layout_constraintHorizontal_weight">3</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+    </style>
+
+    <style name="Text.SongInfo.Fetched" parent="Text.SongInfo">
+        <item name="android:textAlignment">textEnd</item>
+        <item name="layout_constraintHorizontal_weight">7</item>
     </style>
 
     <style name="Text.PanelHeader" parent="Text.Medium.22">
