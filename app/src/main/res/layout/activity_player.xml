@@ -32,10 +32,12 @@
         android:id="@+id/headerBackButton"
         style="@style/Icon.PanelHeader"
         android:contentDescription="@string/back"
+        android:layout_margin="@dimen/small_50"
         android:src="@drawable/ic_arrow_back_24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Top part -->
     <ImageView
         android:id="@+id/songCover"
         android:layout_width="0dp"
@@ -51,8 +53,10 @@
     <TextView
         android:id="@+id/songTitle"
         style="@style/Text.Medium.22"
-        android:layout_width="wrap_content"
+        app:layout_constraintWidth="wrap_content_constrained"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:singleLine="true"
         app:layout_constraintEnd_toEndOf="@id/songCover"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@id/songCover"
@@ -79,7 +83,7 @@
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toEndOf="@id/addToPlaylistButton"
         app:layout_constraintTop_toBottomOf="@+id/songAuthor"
-        app:srcCompat="@drawable/ic_arrow_forward_24" />
+        app:srcCompat="@drawable/ic_play_24" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addToPlaylistButton"
@@ -89,7 +93,7 @@
         app:layout_constraintEnd_toStartOf="@id/playButton"
         app:layout_constraintStart_toStartOf="@id/songCover"
         app:layout_constraintTop_toTopOf="@+id/playButton"
-        app:srcCompat="@drawable/ic_arrow_forward_24" />
+        app:srcCompat="@drawable/ic_add_to_playlist_24" />
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -100,7 +104,7 @@
         app:layout_constraintEnd_toEndOf="@id/songCover"
         app:layout_constraintStart_toEndOf="@id/playButton"
         app:layout_constraintTop_toTopOf="@+id/playButton"
-        app:srcCompat="@drawable/ic_arrow_forward_24" />
+        app:srcCompat="@drawable/ic_favorite_24" />
 
     <TextView
         android:id="@+id/songCurrentDuration"

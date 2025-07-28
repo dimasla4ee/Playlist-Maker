@@ -1,7 +1,9 @@
 package com.dimasla4ee.playlistmaker
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
@@ -12,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
 import com.dimasla4ee.playlistmaker.databinding.ActivitySearchBinding
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
 class SearchActivity : AppCompatActivity() {
@@ -21,6 +24,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchInputEditText: EditText
     private lateinit var searchHistoryAdapter: TracksAdapter
 
+    private lateinit var searchHistory: SearchHistory
     private var query: String = EMPTY_QUERY
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,14 +37,9 @@ class SearchActivity : AppCompatActivity() {
         searchInputEditText = binding.searchInputEditText
 
         prefs = getSharedPreferences(PreferenceKeys.SEARCH_PREFERENCES, MODE_PRIVATE)
-        val searchHistory = SearchHistory(prefs)
-        searchHistoryAdapter = TracksAdapter { track ->
-            searchHistory.add(track)
-            searchHistoryAdapter.submitList(searchHistory.get())
-        }
-        val searchResultsAdapter = TracksAdapter { track ->
-            searchHistory.add(track)
-        }
+        searchHistory = SearchHistory(prefs)
+        searchHistoryAdapter = TracksAdapter { onItemClick(it) }
+        val searchResultsAdapter = TracksAdapter { onItemClick(it) }
 
         setContent(ContentType.NONE)
         searchInputEditText.setText(query)
@@ -50,6 +49,19 @@ class SearchActivity : AppCompatActivity() {
 
         setupWindowInsets(binding.root)
         setupListeners(searchHistory, searchResultsAdapter)
+    }
+
+    private fun onItemClick(track: Track) {
+        searchHistory.add(track)
+        searchHistoryAdapter.submitList(searchHistory.get())
+
+        val intent = Intent(this@SearchActivity, PlayerActivity::class.java).apply {
+            val json = Gson().toJson(track)
+            putExtra("song_info", json)
+            Log.d("JSON", track.toString())
+            Log.d("JSON", json)
+        }
+        startActivity(intent)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -88,10 +100,10 @@ class SearchActivity : AppCompatActivity() {
                 query = text?.toString() ?: EMPTY_QUERY
                 if (query.isEmpty()) {
                     tracksAdapter.submitList(emptyList())
-                    setContent(ContentType.SEARCH_HISTORY)
                     searchHistoryAdapter.submitList(searchHistory.get())
+                    setContent(ContentType.SEARCH_HISTORY)
                 } else {
-                    setContent(ContentType.TRACKLIST)
+                    setContent(ContentType.NONE)
                 }
             }
 
@@ -105,7 +117,6 @@ class SearchActivity : AppCompatActivity() {
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     inputMethodManager?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
-                    setContent(ContentType.TRACKLIST)
                     lifecycleScope.launch {
                         fetchSongsAndUpdateUi(tracksAdapter)
                     }
@@ -130,9 +141,7 @@ class SearchActivity : AppCompatActivity() {
 
         binding.searchStatusReloadButton.setOnClickListener {
             lifecycleScope.launch {
-                fetchSongsAndUpdateUi(
-                    tracksAdapter
-                )
+                fetchSongsAndUpdateUi(tracksAdapter)
             }
         }
     }
@@ -143,15 +152,16 @@ class SearchActivity : AppCompatActivity() {
             doOnResponse = { _, response ->
                 val responseBody = response.body()
 
-                val contentType = when {
-                    response.code() != 200 -> ContentType.ERROR
-                    responseBody?.resultCount == 0 -> ContentType.NO_RESULTS
-                    else -> ContentType.TRACKLIST
-                }
-                setContent(contentType)
-
                 val loadedTracks = responseBody?.results ?: emptyList()
                 tracksAdapter.submitList(loadedTracks)
+
+                setContent(
+                    when {
+                        response.code() != 200 -> ContentType.ERROR
+                        responseBody?.resultCount == 0 -> ContentType.NO_RESULTS
+                        else -> ContentType.TRACKLIST
+                    }
+                )
             },
             doOnFailure = { _, _ ->
                 setContent(ContentType.ERROR)
