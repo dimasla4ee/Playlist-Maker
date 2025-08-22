@@ -1,4 +1,4 @@
-package com.dimasla4ee.playlistmaker
+package com.dimasla4ee.playlistmaker.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.dimasla4ee.playlistmaker.databinding.ActivityMainBinding
+import com.dimasla4ee.playlistmaker.setupWindowInsets
 
 class MainActivity : AppCompatActivity() {
 

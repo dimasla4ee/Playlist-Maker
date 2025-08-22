@@ -1,4 +1,4 @@
-package com.dimasla4ee.playlistmaker
+package com.dimasla4ee.playlistmaker.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,7 +8,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.net.toUri
+import com.dimasla4ee.playlistmaker.App
+import com.dimasla4ee.playlistmaker.R
 import com.dimasla4ee.playlistmaker.databinding.ActivitySettingsBinding
+import com.dimasla4ee.playlistmaker.setupWindowInsets
 
 class SettingsActivity : AppCompatActivity() {
 

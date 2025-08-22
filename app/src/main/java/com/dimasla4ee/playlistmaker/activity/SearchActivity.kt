@@ -1,19 +1,28 @@
-package com.dimasla4ee.playlistmaker
+package com.dimasla4ee.playlistmaker.activity
 
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
+import com.dimasla4ee.playlistmaker.ItunesApiClient
+import com.dimasla4ee.playlistmaker.PlayerActivity
+import com.dimasla4ee.playlistmaker.PreferenceKeys
+import com.dimasla4ee.playlistmaker.R
+import com.dimasla4ee.playlistmaker.SearchHistory
+import com.dimasla4ee.playlistmaker.Track
+import com.dimasla4ee.playlistmaker.TracksAdapter
 import com.dimasla4ee.playlistmaker.databinding.ActivitySearchBinding
+import com.dimasla4ee.playlistmaker.setupWindowInsets
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
@@ -25,7 +34,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchHistoryAdapter: TracksAdapter
 
     private lateinit var searchHistory: SearchHistory
-    private var query: String = EMPTY_QUERY
+    private var query: String = DEFAULT_QUERY
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,12 +64,14 @@ class SearchActivity : AppCompatActivity() {
         searchHistory.add(track)
         searchHistoryAdapter.submitList(searchHistory.get())
 
-        val intent = Intent(this@SearchActivity, PlayerActivity::class.java).apply {
+        val intent = Intent(
+            this@SearchActivity,
+            PlayerActivity::class.java
+        ).apply {
             val json = Gson().toJson(track)
             putExtra("song_info", json)
-            Log.d("JSON", track.toString())
-            Log.d("JSON", json)
         }
+
         startActivity(intent)
     }
 
@@ -71,7 +82,7 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        query = savedInstanceState.getString(PreferenceKeys.Keys.SEARCH_QUERY, EMPTY_QUERY)
+        query = savedInstanceState.getString(PreferenceKeys.Keys.SEARCH_QUERY, DEFAULT_QUERY)
     }
 
     private fun setupListeners(
@@ -97,7 +108,7 @@ class SearchActivity : AppCompatActivity() {
             doOnTextChanged { text, _, _, _ ->
                 binding.searchInputClearButton.visibility = setVisibility(!text.isNullOrEmpty())
 
-                query = text?.toString() ?: EMPTY_QUERY
+                query = text?.toString() ?: DEFAULT_QUERY
                 if (query.isEmpty()) {
                     tracksAdapter.submitList(emptyList())
                     searchHistoryAdapter.submitList(searchHistory.get())
@@ -129,7 +140,7 @@ class SearchActivity : AppCompatActivity() {
         binding.searchInputClearButton.setOnClickListener {
             inputMethodManager?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
             searchInputEditText.apply {
-                setText(EMPTY_QUERY)
+                setText(DEFAULT_QUERY)
                 clearFocus()
                 setContent(ContentType.NONE)
             }
@@ -169,30 +180,29 @@ class SearchActivity : AppCompatActivity() {
         )
     }
 
-    private fun setContent(contentType: ContentType) {
-        binding.searchHistoryLayout.visibility =
-            setVisibility(contentType == ContentType.SEARCH_HISTORY)
-        binding.searchResultsRecyclerView.visibility =
-            setVisibility(contentType == ContentType.TRACKLIST)
+    private fun setContent(type: ContentType) {
+        binding.apply {
+            searchHistoryLayout.visibility = setVisibility(type == ContentType.SEARCH_HISTORY)
+            searchResultsRecyclerView.visibility = setVisibility(type == ContentType.TRACKLIST)
 
-        binding.searchStatusLayout.apply {
-            if (contentType == ContentType.NO_RESULTS || contentType == ContentType.ERROR) {
-                visibility = VISIBLE
-                binding.searchStatusImageView.setImageResource(contentType.res!!)
-                binding.searchStatusTextView.setText(contentType.text!!)
-                binding.searchStatusReloadButton.visibility =
-                    setVisibility(contentType == ContentType.ERROR)
-            } else {
-                visibility = GONE
+            searchStatusLayout.apply {
+                if (type == ContentType.NO_RESULTS || type == ContentType.ERROR) {
+                    visibility = VISIBLE
+                    searchStatusImageView.setImageResource(type.res!!)
+                    searchStatusTextView.setText(type.text!!)
+                    searchStatusReloadButton.visibility = setVisibility(type == ContentType.ERROR)
+                } else {
+                    visibility = GONE
+                }
             }
         }
     }
 
     private fun setVisibility(isVisible: Boolean): Int = if (isVisible) VISIBLE else GONE
 
-    enum class ContentType(
-        val res: Int?,
-        val text: Int?
+    private enum class ContentType(
+        @param:DrawableRes val res: Int?,
+        @param:StringRes val text: Int?
     ) {
         NONE(null, null),
         SEARCH_HISTORY(null, null),
@@ -202,6 +212,6 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private companion object {
-        const val EMPTY_QUERY = ""
+        const val DEFAULT_QUERY = ""
     }
 }
