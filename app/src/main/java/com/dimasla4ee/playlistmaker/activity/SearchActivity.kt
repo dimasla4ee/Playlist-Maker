@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
 import com.dimasla4ee.playlistmaker.ItunesApiClient
+import com.dimasla4ee.playlistmaker.LogUtil
 import com.dimasla4ee.playlistmaker.PlayerActivity
 import com.dimasla4ee.playlistmaker.PreferenceKeys
 import com.dimasla4ee.playlistmaker.R
@@ -157,27 +158,25 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun fetchSongsAndUpdateUi(tracksAdapter: TracksAdapter) {
-        ItunesApiClient.getSongs(
-            query = query,
-            doOnResponse = { _, response ->
-                val responseBody = response.body()
-
-                val loadedTracks = responseBody?.results ?: emptyList()
-                tracksAdapter.submitList(loadedTracks)
-
-                setContent(
-                    when {
-                        response.code() != 200 -> ContentType.ERROR
-                        responseBody?.resultCount == 0 -> ContentType.NO_RESULTS
-                        else -> ContentType.TRACKLIST
-                    }
-                )
-            },
-            doOnFailure = { _, _ ->
-                setContent(ContentType.ERROR)
+    private fun fetchSongsAndUpdateUi(tracksAdapter: TracksAdapter) {
+        lifecycleScope.launch {
+            ItunesApiClient.getSongs(query).run {
+                onSuccess { tracksList ->
+                    tracksAdapter.submitList(tracksList)
+                    setContent(
+                        if (tracksList.isEmpty()) {
+                            ContentType.NO_RESULTS
+                        } else {
+                            ContentType.TRACKLIST
+                        }
+                    )
+                }
+                onFailure { exception ->
+                    setContent(ContentType.ERROR)
+                    LogUtil.e("SearchActivity", "fetchSongsAndUpdateUi: $exception")
+                }
             }
-        )
+        }
     }
 
     private fun setContent(type: ContentType) {
