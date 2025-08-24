@@ -18,4 +18,12 @@
     <string name="been_searched">Вы искали</string>
     <string name="clear_history" >Очистить историю</string>
     <string name="searchbar_hint">Поиск</string>
+    <string name="play">Включить</string>
+    <string name="add_to_playlist">Добавить в плейлист</string>
+    <string name="add_to_favorite">Добавить в избранное</string>
+    <string name="duration_label">Длительность</string>
+    <string name="album_label">Альбом</string>
+    <string name="year_label">Год</string>
+    <string name="genre_label">Жанр</string>
+    <string name="country_label">Страна</string>
 </resources>

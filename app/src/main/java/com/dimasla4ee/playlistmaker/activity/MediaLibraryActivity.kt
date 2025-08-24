@@ -1,9 +1,11 @@
-package com.dimasla4ee.playlistmaker
+package com.dimasla4ee.playlistmaker.activity
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import com.dimasla4ee.playlistmaker.R
 import com.dimasla4ee.playlistmaker.databinding.ActivityMediaLibraryBinding
+import com.dimasla4ee.playlistmaker.setupWindowInsets
 
 class MediaLibraryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMediaLibraryBinding
