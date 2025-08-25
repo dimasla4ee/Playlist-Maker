@@ -14,6 +14,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
+import com.dimasla4ee.playlistmaker.Debouncer
 import com.dimasla4ee.playlistmaker.ItunesApiClient
 import com.dimasla4ee.playlistmaker.LogUtil
 import com.dimasla4ee.playlistmaker.PlayerActivity
@@ -33,6 +34,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
     private lateinit var searchInputEditText: EditText
     private lateinit var searchHistoryAdapter: TracksAdapter
+    private lateinit var searchResultsAdapter: TracksAdapter
 
     private lateinit var searchHistory: SearchHistory
     private var query: String = DEFAULT_QUERY
@@ -50,7 +52,7 @@ class SearchActivity : AppCompatActivity() {
         prefs = getSharedPreferences(PreferenceKeys.SEARCH_PREFERENCES, MODE_PRIVATE)
         searchHistory = SearchHistory(prefs)
         searchHistoryAdapter = TracksAdapter { onItemClick(it) }
-        val searchResultsAdapter = TracksAdapter { onItemClick(it) }
+        searchResultsAdapter = TracksAdapter { onItemClick(it) }
 
         setContent(ContentType.NONE)
         searchInputEditText.setText(query)
@@ -58,7 +60,7 @@ class SearchActivity : AppCompatActivity() {
         binding.searchHistoryRecyclerView.adapter = searchHistoryAdapter
         binding.searchResultsRecyclerView.adapter = searchResultsAdapter
 
-        setupListeners(searchHistory, searchResultsAdapter)
+        setupListeners()
     }
 
     private fun onItemClick(track: Track) {
@@ -86,10 +88,12 @@ class SearchActivity : AppCompatActivity() {
         query = savedInstanceState.getString(PreferenceKeys.Keys.SEARCH_QUERY, DEFAULT_QUERY)
     }
 
-    private fun setupListeners(
-        searchHistory: SearchHistory,
-        tracksAdapter: TracksAdapter,
-    ) {
+    private val getSongs = Runnable {
+        fetchSongsAndUpdateUi()
+        LogUtil.d("SearchActivity", "getSongs: $query")
+    }
+
+    private fun setupListeners() {
         val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
 
         prefs.registerOnSharedPreferenceChangeListener { _, _ ->
@@ -111,10 +115,13 @@ class SearchActivity : AppCompatActivity() {
 
                 query = text?.toString() ?: DEFAULT_QUERY
                 if (query.isEmpty()) {
-                    tracksAdapter.submitList(emptyList())
+                    searchResultsAdapter.submitList(emptyList())
                     searchHistoryAdapter.submitList(searchHistory.get())
                     setContent(ContentType.SEARCH_HISTORY)
                 } else {
+                    Debouncer.debounce {
+                        getSongs.run()
+                    }
                     setContent(ContentType.NONE)
                 }
             }
@@ -130,7 +137,7 @@ class SearchActivity : AppCompatActivity() {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     inputMethodManager?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
                     lifecycleScope.launch {
-                        fetchSongsAndUpdateUi(tracksAdapter)
+                        fetchSongsAndUpdateUi()
                     }
                     true
                 }
@@ -153,16 +160,21 @@ class SearchActivity : AppCompatActivity() {
 
         binding.searchStatusReloadButton.setOnClickListener {
             lifecycleScope.launch {
-                fetchSongsAndUpdateUi(tracksAdapter)
+                fetchSongsAndUpdateUi()
             }
         }
     }
 
-    private fun fetchSongsAndUpdateUi(tracksAdapter: TracksAdapter) {
+    private fun fetchSongsAndUpdateUi() {
+        if (query.isEmpty()) {
+            setContent(ContentType.SEARCH_HISTORY)
+            return
+        }
+
         lifecycleScope.launch {
             ItunesApiClient.getSongs(query).run {
                 onSuccess { tracksList ->
-                    tracksAdapter.submitList(tracksList)
+                    searchResultsAdapter.submitList(tracksList)
                     setContent(
                         if (tracksList.isEmpty()) {
                             ContentType.NO_RESULTS
