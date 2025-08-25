@@ -5,19 +5,13 @@
     android:gravity="center_horizontal">
 
     <!-- Header -->
-    <LinearLayout style="@style/LinearLayout.PanelHeader">
-
-        <ImageButton
-            android:id="@+id/headerBackButton"
-            style="@style/Icon.PanelHeader"
-            android:contentDescription="@string/back"
-            android:src="@drawable/ic_arrow_back_24" />
-
-        <TextView
-            android:id="@+id/headerTitleTextView"
-            style="@style/Text.PanelHeader"
-            android:text="@string/search" />
-    </LinearLayout>
+    <com.dimasla4ee.playlistmaker.view.PanelHeader
+        android:id="@+id/panelHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/search"
+        app:iconSrc="@drawable/ic_arrow_back_24"
+        app:showIcon="true" />
 
     <!-- SearchBar -->
     <LinearLayout

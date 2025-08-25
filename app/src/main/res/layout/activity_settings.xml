@@ -1,22 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/LinearLayout">
 
-    <LinearLayout style="@style/LinearLayout.PanelHeader">
-
-        <ImageButton
-            android:id="@+id/headerBackButton"
-            style="@style/Icon.PanelHeader"
-            android:contentDescription="@string/back"
-            android:src="@drawable/ic_arrow_back_24" />
-
-        <TextView
-            android:id="@+id/settingsTextView"
-            style="@style/Text.PanelHeader"
-            android:text="@string/settings" />
-    </LinearLayout>
+    <com.dimasla4ee.playlistmaker.view.PanelHeader
+        android:id="@+id/panelHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/settings"
+        app:iconSrc="@drawable/ic_arrow_back_24"
+        app:showIcon="true" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/darkThemeLayout"

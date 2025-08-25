@@ -27,7 +27,7 @@ class PlayerActivity : AppCompatActivity() {
 
         fillTrackInfo(track)
 
-        binding.headerBackButton.setOnClickListener {
+        binding.panelHeader.setOnIconClickListener {
             finish()
         }
 

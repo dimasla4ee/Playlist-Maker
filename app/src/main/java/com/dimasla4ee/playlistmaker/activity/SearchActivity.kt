@@ -105,7 +105,7 @@ class SearchActivity : AppCompatActivity() {
             setContent(ContentType.NONE)
         }
 
-        binding.headerBackButton.setOnClickListener {
+        binding.panelHeader.setOnIconClickListener {
             finish()
         }
 

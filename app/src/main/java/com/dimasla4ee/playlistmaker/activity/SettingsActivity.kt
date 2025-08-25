@@ -3,7 +3,6 @@ package com.dimasla4ee.playlistmaker.activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.CompoundButton
-import android.widget.ImageButton
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -16,7 +15,6 @@ import com.dimasla4ee.playlistmaker.setupWindowInsets
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
-    private lateinit var backButton: ImageButton
     private lateinit var toggleThemeButton: ConstraintLayout
     private lateinit var toggleThemeSwitch: CompoundButton
     private lateinit var shareAppButton: ConstraintLayout
@@ -27,7 +25,6 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivitySettingsBinding.inflate(layoutInflater)
-        backButton = binding.headerBackButton
         toggleThemeButton = binding.darkThemeLayout
         toggleThemeSwitch = binding.darkThemeSwitch.apply {
             isChecked = (applicationContext as App).isDarkThemeEnabled
@@ -41,7 +38,7 @@ class SettingsActivity : AppCompatActivity() {
 
         setupWindowInsets(binding.root)
 
-        backButton.setOnClickListener {
+        binding.panelHeader.setOnIconClickListener {
             finish()
         }
 

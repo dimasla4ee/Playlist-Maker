@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageButton
+        android:id="@+id/headerBackButton"
+        style="@style/Icon.PanelHeader"
+        android:contentDescription="@string/back"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/headerTitleTextView"
+        style="@style/Text.PanelHeader" />
+
+</merge>
