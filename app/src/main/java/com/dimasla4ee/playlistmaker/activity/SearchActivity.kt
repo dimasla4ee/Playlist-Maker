@@ -171,6 +171,7 @@ class SearchActivity : AppCompatActivity() {
             return
         }
 
+        binding.searchProgressBar.visibility = VISIBLE
         lifecycleScope.launch {
             ItunesApiClient.getSongs(query).run {
                 onSuccess { tracksList ->
@@ -195,6 +196,7 @@ class SearchActivity : AppCompatActivity() {
         binding.apply {
             searchHistoryLayout.visibility = setVisibility(type == ContentType.SEARCH_HISTORY)
             searchResultsRecyclerView.visibility = setVisibility(type == ContentType.TRACKLIST)
+            searchProgressBar.visibility = GONE
 
             searchStatusLayout.apply {
                 if (type == ContentType.NO_RESULTS || type == ContentType.ERROR) {

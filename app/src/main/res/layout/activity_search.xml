@@ -48,6 +48,7 @@
             android:visibility="gone" />
     </LinearLayout>
 
+    <!-- Search Results RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchResultsRecyclerView"
         android:layout_width="match_parent"
@@ -57,6 +58,7 @@
         android:paddingBottom="?attr/actionBarSize"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
+    <!-- Search History Layout -->
     <LinearLayout
         android:id="@+id/searchHistoryLayout"
         android:layout_width="match_parent"
@@ -85,6 +87,23 @@
             android:text="@string/clear_history" />
     </LinearLayout>
 
+    <!-- ProgressBar -->
+    <LinearLayout
+        android:id="@+id/searchProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/blue" />
+    </LinearLayout>
+
+    <!-- Search Status Layout -->
     <LinearLayout
         android:id="@+id/searchStatusLayout"
         android:layout_width="match_parent"
