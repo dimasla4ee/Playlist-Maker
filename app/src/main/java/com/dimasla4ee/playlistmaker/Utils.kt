@@ -8,6 +8,8 @@ import android.view.View.VISIBLE
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 /**
  * Converts a value in density-independent pixels (dp) to pixels (px).
@@ -78,3 +80,10 @@ fun setupWindowInsets(
         WindowInsetsCompat.CONSUMED
     }
 }
+
+/**
+ * Formats an integer representing milliseconds into a "mm:ss" string.
+ *
+ * @return A string representation of the time in minutes and seconds.
+ */
+fun Int.toMmSs(): String = SimpleDateFormat("mm:ss", Locale.getDefault()).format(this)
