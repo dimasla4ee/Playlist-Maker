@@ -1,9 +1,12 @@
 package com.dimasla4ee.playlistmaker
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+@Parcelize
 data class Track(
     @SerializedName("trackId") val id: Int,
     @SerializedName("trackName") val title: String,
@@ -15,7 +18,7 @@ data class Track(
     @SerializedName("trackTimeMillis") val durationInMillis: Long,
     @SerializedName("artworkUrl100") val urlPreviewArtwork: String,
     @SerializedName("previewUrl") val urlPreviewAudio: String
-) {
+) : Parcelable {
     val year: Int?
         get() = releaseDate.substring(0, 4).toIntOrNull()
 

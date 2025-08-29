@@ -1,6 +1,7 @@
 package com.dimasla4ee.playlistmaker.activity
 
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import androidx.activity.enableEdgeToEdge
@@ -8,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.dimasla4ee.playlistmaker.Keys
 import com.dimasla4ee.playlistmaker.R
 import com.dimasla4ee.playlistmaker.Track
 import com.dimasla4ee.playlistmaker.databinding.ActivityPlayerBinding
@@ -15,7 +17,6 @@ import com.dimasla4ee.playlistmaker.dpToPx
 import com.dimasla4ee.playlistmaker.setupWindowInsets
 import com.dimasla4ee.playlistmaker.show
 import com.dimasla4ee.playlistmaker.toMmSs
-import com.google.gson.Gson
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -40,10 +41,14 @@ class PlayerActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setupWindowInsets(binding.root)
 
-        val json = intent.getStringExtra("song_info")
-        track = Gson().fromJson(json, Track::class.java)
         handler = Handler(mainLooper)
 
+        track = (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra(Keys.TRACK_INFO, Track::class.java)
+        } else {
+            @Suppress("deprecation")
+            intent.getParcelableExtra(Keys.TRACK_INFO)
+        })!!
         fillTrackInfo(track)
 
         binding.panelHeader.setOnIconClickListener { finish() }

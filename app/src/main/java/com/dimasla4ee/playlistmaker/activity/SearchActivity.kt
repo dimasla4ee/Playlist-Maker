@@ -17,7 +17,7 @@ import androidx.core.widget.doOnTextChanged
 import com.dimasla4ee.playlistmaker.Debouncer
 import com.dimasla4ee.playlistmaker.ItunesApiClient
 import com.dimasla4ee.playlistmaker.LogUtil
-import com.dimasla4ee.playlistmaker.PreferenceKeys
+import com.dimasla4ee.playlistmaker.Keys
 import com.dimasla4ee.playlistmaker.R
 import com.dimasla4ee.playlistmaker.SearchHistory
 import com.dimasla4ee.playlistmaker.Track
@@ -25,7 +25,6 @@ import com.dimasla4ee.playlistmaker.TracksAdapter
 import com.dimasla4ee.playlistmaker.databinding.ActivitySearchBinding
 import com.dimasla4ee.playlistmaker.setupWindowInsets
 import com.dimasla4ee.playlistmaker.show
-import com.google.gson.Gson
 
 class SearchActivity : AppCompatActivity() {
 
@@ -58,7 +57,7 @@ class SearchActivity : AppCompatActivity() {
 
         searchInputEditText = binding.searchInputEditText
 
-        prefs = getSharedPreferences(PreferenceKeys.SEARCH_PREFERENCES, MODE_PRIVATE)
+        prefs = getSharedPreferences(Keys.SEARCH_PREFERENCES, MODE_PRIVATE)
         searchHistory = SearchHistory(prefs)
         searchHistoryAdapter = TracksAdapter { onItemClick(it) }
         searchResultsAdapter = TracksAdapter { onItemClick(it) }
@@ -76,25 +75,20 @@ class SearchActivity : AppCompatActivity() {
         searchHistory.add(track)
         searchHistoryAdapter.submitList(searchHistory.get())
 
-        val intent = Intent(
-            this@SearchActivity,
-            PlayerActivity::class.java
-        ).apply {
-            val json = Gson().toJson(track)
-            putExtra("song_info", json)
-        }
+        val intent = Intent(this@SearchActivity, PlayerActivity::class.java)
+        intent.putExtra(Keys.TRACK_INFO, track)
 
         startActivity(intent)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(PreferenceKeys.Keys.SEARCH_QUERY, query)
+        outState.putString(Keys.Preference.SEARCH_QUERY, query)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        query = savedInstanceState.getString(PreferenceKeys.Keys.SEARCH_QUERY, DEFAULT_QUERY)
+        query = savedInstanceState.getString(Keys.Preference.SEARCH_QUERY, DEFAULT_QUERY)
     }
 
     private fun setupListeners() {
