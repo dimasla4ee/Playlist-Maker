@@ -4,8 +4,8 @@ import android.os.Handler
 import android.os.Looper
 
 object Debouncer {
-    const val CLICK_DEBOUNCE_MILLIS = 1000L
-    const val DEFAULT_DEBOUNCE_MILLIS = 2000L
+    private const val CLICK_DEBOUNCE_MILLIS = 1000L
+    private const val DEFAULT_DEBOUNCE_MILLIS = 2000L
 
     private var isClickAllowed = true
 

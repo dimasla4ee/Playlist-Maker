@@ -3,6 +3,8 @@ package com.dimasla4ee.playlistmaker.activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -12,7 +14,6 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.lifecycleScope
 import com.dimasla4ee.playlistmaker.Debouncer
 import com.dimasla4ee.playlistmaker.ItunesApiClient
 import com.dimasla4ee.playlistmaker.LogUtil
@@ -25,7 +26,6 @@ import com.dimasla4ee.playlistmaker.databinding.ActivitySearchBinding
 import com.dimasla4ee.playlistmaker.setupWindowInsets
 import com.dimasla4ee.playlistmaker.show
 import com.google.gson.Gson
-import kotlinx.coroutines.launch
 
 class SearchActivity : AppCompatActivity() {
 
@@ -37,6 +37,7 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var searchHistory: SearchHistory
     private var query: String = DEFAULT_QUERY
+    private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,7 +126,7 @@ class SearchActivity : AppCompatActivity() {
                         if (searchHistoryList.isEmpty()) ContentType.NONE else ContentType.SEARCH_HISTORY
                     )
                 } else {
-                    Debouncer.debounce { fetchSongsAndUpdateUi() }
+                    Debouncer.debounce { Thread(getSongsRunnable).start() }
                     setContent(ContentType.NONE)
                 }
             }
@@ -140,7 +141,7 @@ class SearchActivity : AppCompatActivity() {
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     inputMethodManager?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
-                    lifecycleScope.launch { fetchSongsAndUpdateUi() }
+                    fetchSongsAndUpdateUi()
                     true
                 } else false
             }
@@ -161,34 +162,36 @@ class SearchActivity : AppCompatActivity() {
 
         binding.searchStatusReloadButton.setOnClickListener {
             setContent(ContentType.NONE)
-            lifecycleScope.launch {
-                fetchSongsAndUpdateUi()
-            }
+            fetchSongsAndUpdateUi()
         }
     }
 
     private fun fetchSongsAndUpdateUi() {
         if (query.isEmpty()) {
-            setContent(ContentType.SEARCH_HISTORY)
+            runOnUiThread { setContent(ContentType.SEARCH_HISTORY) }
             return
         }
 
-        binding.searchProgressBar.show(true)
-        lifecycleScope.launch {
-            ItunesApiClient.getSongs(query).run {
+        runOnUiThread { binding.searchProgressBar.show(true) }
+
+        var contentType: ContentType = ContentType.NONE
+        ItunesApiClient.getSongs(query).run {
+            handler.post {
                 onSuccess { tracksList ->
                     searchResultsAdapter.submitList(tracksList)
-                    setContent(
+                    contentType =
                         if (tracksList.isEmpty()) ContentType.NO_RESULTS else ContentType.TRACKLIST
-                    )
                 }
                 onFailure { exception ->
-                    setContent(ContentType.ERROR)
+                    contentType = ContentType.ERROR
                     LogUtil.e("SearchActivity", "fetchSongsAndUpdateUi: $exception")
                 }
             }
         }
+        runOnUiThread { setContent(contentType) }
     }
+
+    private val getSongsRunnable = Runnable { fetchSongsAndUpdateUi() }
 
     private fun setContent(type: ContentType) {
         binding.apply {

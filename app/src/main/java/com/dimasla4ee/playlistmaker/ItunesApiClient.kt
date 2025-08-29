@@ -1,5 +1,6 @@
 package com.dimasla4ee.playlistmaker
 
+import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -19,16 +20,16 @@ object ItunesApiClient {
         retrofit.create(ItunesService::class.java)
     }
 
-    suspend fun getSongs(query: String): Result<List<Track>> = runCatching {
-        service.getSongs(query).results
+    fun getSongs(query: String): Result<List<Track>> = runCatching {
+        service.getSongs(query).execute().body()?.results ?: emptyList()
     }
 
     private interface ItunesService {
         @GET("search")
-        suspend fun getSongs(
+        fun getSongs(
             @Query("term") query: String,
             @Query("media") mediaType: String = "music"
-        ): ItunesQueryResponse
+        ): Call<ItunesQueryResponse>
     }
 
     private data class ItunesQueryResponse(
