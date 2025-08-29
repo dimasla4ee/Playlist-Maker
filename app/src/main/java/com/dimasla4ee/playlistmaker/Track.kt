@@ -13,7 +13,8 @@ data class Track(
     @SerializedName("releaseDate") val releaseDate: String,
     @SerializedName("primaryGenreName") val genre: String,
     @SerializedName("trackTimeMillis") val durationInMillis: Long,
-    @SerializedName("artworkUrl100") val urlPreviewArtwork: String
+    @SerializedName("artworkUrl100") val urlPreviewArtwork: String,
+    @SerializedName("previewUrl") val urlPreviewAudio: String
 ) {
     val year: Int?
         get() = releaseDate.substring(0, 4).toIntOrNull()

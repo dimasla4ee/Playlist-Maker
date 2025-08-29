@@ -16,7 +16,6 @@ import androidx.lifecycle.lifecycleScope
 import com.dimasla4ee.playlistmaker.Debouncer
 import com.dimasla4ee.playlistmaker.ItunesApiClient
 import com.dimasla4ee.playlistmaker.LogUtil
-import com.dimasla4ee.playlistmaker.PlayerActivity
 import com.dimasla4ee.playlistmaker.PreferenceKeys
 import com.dimasla4ee.playlistmaker.R
 import com.dimasla4ee.playlistmaker.SearchHistory

@@ -5,11 +5,6 @@
 
     <!-- Guidelines -->
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineBottom"
-        style="@style/Guideline.Horizontal"
-        app:layout_constraintGuide_end="?actionBarSize" />
-
-    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineStart"
         style="@style/Guideline.Vertical"
         app:layout_constraintGuide_begin="@dimen/normal_100" />
@@ -148,11 +143,11 @@
     <androidx.constraintlayout.helper.widget.Flow
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:flow_wrapMode="chain"
-        app:flow_verticalStyle="packed"
+        app:constraint_referenced_ids="searchStatusImageView,searchStatusTextView,searchStatusReloadButton"
         app:flow_maxElementsWrap="1"
         app:flow_verticalGap="@dimen/normal_100"
-        app:constraint_referenced_ids="searchStatusImageView,searchStatusTextView,searchStatusReloadButton"
+        app:flow_verticalStyle="packed"
+        app:flow_wrapMode="chain"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
         app:layout_constraintStart_toStartOf="@id/guidelineStart"

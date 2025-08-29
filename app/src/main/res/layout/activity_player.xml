@@ -4,18 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     style="@style/ConstraintLayout"
-    tools:context=".PlayerActivity">
+    tools:context=".activity.PlayerActivity">
 
     <!-- Guidelines -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineTop"
         style="@style/Guideline.Horizontal"
         app:layout_constraintGuide_begin="@dimen/panel_header_height" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineBottom"
-        style="@style/Guideline.Horizontal"
-        app:layout_constraintGuide_end="?actionBarSize" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineStart"
@@ -30,8 +25,8 @@
     <!-- Header -->
     <com.dimasla4ee.playlistmaker.view.PanelHeader
         android:id="@+id/panelHeader"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/LinearLayout.PanelHeader"
+        android:background="@color/transparent"
         app:iconSrc="@drawable/ic_arrow_back_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,7 +38,6 @@
         android:id="@+id/songCover"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginVertical="24dp"
         android:importantForAccessibility="no"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
@@ -79,7 +73,7 @@
         android:id="@+id/playButton"
         style="@style/FloatingActionButton.Big"
         android:contentDescription="@string/play"
-        app:layout_constraintBottom_toTopOf="@id/songDurationLabel"
+        app:layout_constraintBottom_toTopOf="@id/songInfoFlow"
         app:layout_constraintEnd_toStartOf="@id/addToFavoriteButton"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toEndOf="@id/addToPlaylistButton"
@@ -95,7 +89,6 @@
         app:layout_constraintStart_toStartOf="@id/songCover"
         app:layout_constraintTop_toTopOf="@+id/playButton"
         app:srcCompat="@drawable/ic_add_to_playlist_24" />
-
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addToFavoriteButton"
@@ -114,89 +107,74 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/songDurationLabel"
+        app:layout_constraintBottom_toTopOf="@+id/songInfoFlow"
         app:layout_constraintEnd_toEndOf="@id/playButton"
         app:layout_constraintStart_toStartOf="@id/playButton"
         app:layout_constraintTop_toBottomOf="@id/playButton"
         app:layout_constraintVertical_bias="0.0" />
 
+    <!-- Bottom part -->
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/songInfoFlow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="songDurationLabel,songDurationFetched,songAlbumLabel,songAlbumFetched,songYearLabel,songYearFetched,songGenreLabel,songGenreFetched,songCountryLabel,songCountryFetched"
+        app:flow_horizontalStyle="spread"
+        app:flow_maxElementsWrap="2"
+        app:flow_verticalStyle="packed"
+        app:flow_wrapMode="chain"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/songCover"
+        app:layout_constraintStart_toStartOf="@id/songCover" />
+
     <!-- Duration -->
     <TextView
         android:id="@+id/songDurationLabel"
         style="@style/Text.SongInfo.Label"
-        android:text="@string/duration_label"
-        app:layout_constraintBottom_toTopOf="@id/songAlbumLabel"
-        app:layout_constraintEnd_toStartOf="@id/songDurationFetched"
-        app:layout_constraintStart_toStartOf="@id/songCover" />
+        android:text="@string/duration_label" />
 
     <TextView
         android:id="@+id/songDurationFetched"
-        style="@style/Text.SongInfo.Fetched"
-        app:layout_constraintBottom_toBottomOf="@id/songDurationLabel"
-        app:layout_constraintEnd_toEndOf="@id/songCover"
-        app:layout_constraintStart_toEndOf="@id/songDurationLabel" />
+        style="@style/Text.SongInfo.Fetched" />
 
     <!-- Album -->
     <TextView
         android:id="@+id/songAlbumLabel"
         style="@style/Text.SongInfo.Label"
-        android:text="@string/album_label"
-        app:layout_constraintBottom_toTopOf="@id/songYearLabel"
-        app:layout_constraintEnd_toStartOf="@id/songAlbumFetched"
-        app:layout_constraintStart_toStartOf="@id/songCover" />
+        android:text="@string/album_label" />
 
     <TextView
         android:id="@+id/songAlbumFetched"
-        style="@style/Text.SongInfo.Fetched"
-        app:layout_constraintBottom_toBottomOf="@id/songAlbumLabel"
-        app:layout_constraintEnd_toEndOf="@id/songCover"
-        app:layout_constraintStart_toEndOf="@id/songAlbumLabel" />
+        style="@style/Text.SongInfo.Fetched" />
 
     <!-- Year -->
     <TextView
         android:id="@+id/songYearLabel"
         style="@style/Text.SongInfo.Label"
-        android:text="@string/year_label"
-        app:layout_constraintBottom_toTopOf="@id/songGenreLabel"
-        app:layout_constraintEnd_toStartOf="@id/songYearFetched"
-        app:layout_constraintStart_toStartOf="@id/songCover" />
+        android:text="@string/year_label" />
 
     <TextView
         android:id="@+id/songYearFetched"
-        style="@style/Text.SongInfo.Fetched"
-        app:layout_constraintBottom_toBottomOf="@id/songYearLabel"
-        app:layout_constraintEnd_toEndOf="@id/songCover"
-        app:layout_constraintStart_toEndOf="@id/songYearLabel" />
+        style="@style/Text.SongInfo.Fetched" />
 
     <!-- Genre -->
     <TextView
         android:id="@+id/songGenreLabel"
         style="@style/Text.SongInfo.Label"
-        android:text="@string/genre_label"
-        app:layout_constraintBottom_toTopOf="@id/songCountryLabel"
-        app:layout_constraintEnd_toStartOf="@id/songGenreFetched"
-        app:layout_constraintStart_toStartOf="@id/songCover" />
+        android:text="@string/genre_label" />
 
     <TextView
         android:id="@+id/songGenreFetched"
-        style="@style/Text.SongInfo.Fetched"
-        app:layout_constraintBottom_toBottomOf="@id/songGenreLabel"
-        app:layout_constraintEnd_toEndOf="@id/songCover"
-        app:layout_constraintStart_toEndOf="@id/songGenreLabel" />
+        style="@style/Text.SongInfo.Fetched" />
 
     <!-- Country -->
     <TextView
         android:id="@+id/songCountryLabel"
         style="@style/Text.SongInfo.Label"
-        android:text="@string/country_label"
-        app:layout_constraintBottom_toTopOf="@id/guidelineBottom"
-        app:layout_constraintEnd_toStartOf="@id/songCountryFetched"
-        app:layout_constraintStart_toStartOf="@id/songCover" />
+        android:text="@string/country_label" />
 
     <TextView
         android:id="@+id/songCountryFetched"
-        style="@style/Text.SongInfo.Fetched"
-        app:layout_constraintBottom_toBottomOf="@id/songCountryLabel"
-        app:layout_constraintEnd_toEndOf="@id/songCover"
-        app:layout_constraintStart_toEndOf="@id/songCountryLabel" />
+        style="@style/Text.SongInfo.Fetched" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
