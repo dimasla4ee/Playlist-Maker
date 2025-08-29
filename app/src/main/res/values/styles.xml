@@ -52,8 +52,6 @@
         <item name="android:layout_height">@dimen/searchbar_height</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:layout_marginHorizontal">@dimen/normal_100</item>
-        <item name="android:layout_marginVertical">@dimen/small_100</item>
         <item name="android:paddingHorizontal">@dimen/small_150</item>
         <item name="android:paddingVertical">@dimen/small_125</item>
         <item name="android:background">@drawable/rounded_corners</item>

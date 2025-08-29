@@ -15,7 +15,7 @@
 
     <dimen name="panel_header_height">56dp</dimen>
     <dimen name="setting_height">61dp</dimen>
-    <dimen name="searchbar_height">36dp</dimen>
+    <dimen name="searchbar_height">38dp</dimen>
 
     <dimen name="regular_weight">400</dimen>
     <dimen name="medium_weight">500</dimen>

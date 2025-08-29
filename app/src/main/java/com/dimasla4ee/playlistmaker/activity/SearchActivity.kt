@@ -3,8 +3,7 @@ package com.dimasla4ee.playlistmaker.activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.View.GONE
-import android.view.View.VISIBLE
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -25,6 +24,7 @@ import com.dimasla4ee.playlistmaker.Track
 import com.dimasla4ee.playlistmaker.TracksAdapter
 import com.dimasla4ee.playlistmaker.databinding.ActivitySearchBinding
 import com.dimasla4ee.playlistmaker.setupWindowInsets
+import com.dimasla4ee.playlistmaker.show
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
@@ -45,7 +45,16 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
         enableEdgeToEdge()
-        setupWindowInsets(binding.root)
+
+        setupWindowInsets(binding.root) { insets ->
+            val params = binding.searchHistoryClearButton.layoutParams
+                    as? ViewGroup.MarginLayoutParams
+
+            if (params != null) {
+                params.bottomMargin = 10
+                binding.searchHistoryClearButton.layoutParams = params
+            }
+        }
 
         searchInputEditText = binding.searchInputEditText
 
@@ -88,11 +97,6 @@ class SearchActivity : AppCompatActivity() {
         query = savedInstanceState.getString(PreferenceKeys.Keys.SEARCH_QUERY, DEFAULT_QUERY)
     }
 
-    private val getSongs = Runnable {
-        fetchSongsAndUpdateUi()
-        LogUtil.d("SearchActivity", "getSongs: $query")
-    }
-
     private fun setupListeners() {
         val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
 
@@ -111,17 +115,18 @@ class SearchActivity : AppCompatActivity() {
 
         searchInputEditText.apply {
             doOnTextChanged { text, _, _, _ ->
-                binding.searchInputClearButton.visibility = setVisibility(!text.isNullOrEmpty())
-
                 query = text?.toString() ?: DEFAULT_QUERY
+                binding.searchInputClearButton.show(query.isNotEmpty())
+
                 if (query.isEmpty()) {
+                    val searchHistoryList = searchHistory.get()
                     searchResultsAdapter.submitList(emptyList())
                     searchHistoryAdapter.submitList(searchHistory.get())
-                    setContent(ContentType.SEARCH_HISTORY)
+                    setContent(
+                        if (searchHistoryList.isEmpty()) ContentType.NONE else ContentType.SEARCH_HISTORY
+                    )
                 } else {
-                    Debouncer.debounce {
-                        getSongs.run()
-                    }
+                    Debouncer.debounce { fetchSongsAndUpdateUi() }
                     setContent(ContentType.NONE)
                 }
             }
@@ -136,12 +141,9 @@ class SearchActivity : AppCompatActivity() {
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     inputMethodManager?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
-                    lifecycleScope.launch {
-                        fetchSongsAndUpdateUi()
-                    }
+                    lifecycleScope.launch { fetchSongsAndUpdateUi() }
                     true
-                }
-                false
+                } else false
             }
         }
 
@@ -159,6 +161,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.searchStatusReloadButton.setOnClickListener {
+            setContent(ContentType.NONE)
             lifecycleScope.launch {
                 fetchSongsAndUpdateUi()
             }
@@ -171,17 +174,13 @@ class SearchActivity : AppCompatActivity() {
             return
         }
 
-        binding.searchProgressBar.visibility = VISIBLE
+        binding.searchProgressBar.show(true)
         lifecycleScope.launch {
             ItunesApiClient.getSongs(query).run {
                 onSuccess { tracksList ->
                     searchResultsAdapter.submitList(tracksList)
                     setContent(
-                        if (tracksList.isEmpty()) {
-                            ContentType.NO_RESULTS
-                        } else {
-                            ContentType.TRACKLIST
-                        }
+                        if (tracksList.isEmpty()) ContentType.NO_RESULTS else ContentType.TRACKLIST
                     )
                 }
                 onFailure { exception ->
@@ -194,24 +193,29 @@ class SearchActivity : AppCompatActivity() {
 
     private fun setContent(type: ContentType) {
         binding.apply {
-            searchHistoryLayout.visibility = setVisibility(type == ContentType.SEARCH_HISTORY)
-            searchResultsRecyclerView.visibility = setVisibility(type == ContentType.TRACKLIST)
-            searchProgressBar.visibility = GONE
+            (type == ContentType.SEARCH_HISTORY).let { isSearchHistory ->
+                searchHistoryLabel.show(isSearchHistory)
+                searchHistoryClearButton.show(isSearchHistory)
+                searchHistoryRecyclerView.show(isSearchHistory)
+            }
 
-            searchStatusLayout.apply {
-                if (type == ContentType.NO_RESULTS || type == ContentType.ERROR) {
-                    visibility = VISIBLE
-                    searchStatusImageView.setImageResource(type.res!!)
-                    searchStatusTextView.setText(type.text!!)
-                    searchStatusReloadButton.visibility = setVisibility(type == ContentType.ERROR)
-                } else {
-                    visibility = GONE
-                }
+            searchResultsRecyclerView.show(type == ContentType.TRACKLIST)
+            searchProgressBar.show(false)
+
+            if (type == ContentType.NO_RESULTS || type == ContentType.ERROR) {
+                searchStatusReloadButton.show(true)
+                searchStatusTextView.show(true)
+                searchStatusImageView.show(true)
+                searchStatusImageView.setImageResource(type.res!!)
+                searchStatusTextView.setText(type.text!!)
+                searchStatusReloadButton.show(type == ContentType.ERROR)
+            } else {
+                searchStatusReloadButton.show(false)
+                searchStatusTextView.show(false)
+                searchStatusImageView.show(false)
             }
         }
     }
-
-    private fun setVisibility(isVisible: Boolean): Int = if (isVisible) VISIBLE else GONE
 
     private enum class ContentType(
         @param:DrawableRes val res: Int?,
