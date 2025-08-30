@@ -1,6 +1,8 @@
 package com.dimasla4ee.playlistmaker
 
 import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -20,8 +22,27 @@ object ItunesApiClient {
         retrofit.create(ItunesService::class.java)
     }
 
-    fun getSongs(query: String): Result<List<Track>> = runCatching {
-        service.getSongs(query).execute().body()?.results ?: emptyList()
+    fun getSongs(
+        query: String,
+        onSuccess: (call: Call<ItunesResponse?>, response: Response<ItunesResponse?>) -> Unit,
+        onFailure: (call: Call<ItunesResponse?>, t: Throwable) -> Unit
+    ) {
+        service.getSongs(query).enqueue(object : Callback<ItunesResponse> {
+            override fun onResponse(
+                call: Call<ItunesResponse?>,
+                response: Response<ItunesResponse?>
+            ) {
+                onSuccess(call, response)
+            }
+
+            override fun onFailure(
+                call: Call<ItunesResponse?>,
+                t: Throwable
+            ) {
+                onFailure(call, t)
+            }
+
+        })
     }
 
     private interface ItunesService {
@@ -29,10 +50,10 @@ object ItunesApiClient {
         fun getSongs(
             @Query("term") query: String,
             @Query("media") mediaType: String = "music"
-        ): Call<ItunesQueryResponse>
+        ): Call<ItunesResponse>
     }
 
-    private data class ItunesQueryResponse(
+    data class ItunesResponse(
         val results: List<Track>
     )
 }
