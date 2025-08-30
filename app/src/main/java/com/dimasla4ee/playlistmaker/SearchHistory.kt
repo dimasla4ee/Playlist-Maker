@@ -11,7 +11,7 @@ class SearchHistory(
     private var savedTracks: ArrayDeque<Track> = ArrayDeque()
 
     init {
-        val json = prefs.getString(PreferenceKeys.Keys.SEARCH_HISTORY, null)
+        val json = prefs.getString(Keys.Preference.SEARCH_HISTORY, null)
         val array = gson.fromJson(json, Array<Track>::class.java) ?: emptyArray()
         savedTracks.addAll(array)
     }
@@ -47,7 +47,7 @@ class SearchHistory(
     private fun saveSearchHistoryToPreferences() {
         prefs.edit {
             val json = gson.toJson(savedTracks)
-            putString(PreferenceKeys.Keys.SEARCH_HISTORY, json)
+            putString(Keys.Preference.SEARCH_HISTORY, json)
         }
     }
 

@@ -1,28 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/LinearLayout"
-    android:gravity="center_horizontal">
+    style="@style/ConstraintLayout">
+
+    <!-- Guidelines -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineStart"
+        style="@style/Guideline.Vertical"
+        app:layout_constraintGuide_begin="@dimen/normal_100" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineEnd"
+        style="@style/Guideline.Vertical"
+        app:layout_constraintGuide_end="@dimen/normal_100" />
 
     <!-- Header -->
-    <LinearLayout style="@style/LinearLayout.PanelHeader">
-
-        <ImageButton
-            android:id="@+id/headerBackButton"
-            style="@style/Icon.PanelHeader"
-            android:contentDescription="@string/back"
-            android:src="@drawable/ic_arrow_back_24" />
-
-        <TextView
-            android:id="@+id/headerTitleTextView"
-            style="@style/Text.PanelHeader"
-            android:text="@string/search" />
-    </LinearLayout>
+    <com.dimasla4ee.playlistmaker.view.PanelHeader
+        android:id="@+id/panelHeader"
+        style="@style/LinearLayout.PanelHeader"
+        android:text="@string/search"
+        app:iconSrc="@drawable/ic_arrow_back_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:showIcon="true" />
 
     <!-- SearchBar -->
     <LinearLayout
         android:id="@+id/searchBarContainerLayout"
-        style="@style/LinearLayout.Searchbar">
+        style="@style/LinearLayout.Searchbar"
+        android:layout_width="0dp"
+        android:layout_marginTop="@dimen/small_100"
+        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+        app:layout_constraintStart_toStartOf="@id/guidelineStart"
+        app:layout_constraintTop_toBottomOf="@id/panelHeader">
 
         <ImageView
             style="@style/Icon.SearchBar"
@@ -32,11 +43,11 @@
         <EditText
             android:id="@+id/searchInputEditText"
             style="@style/EditText.SearchBar"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:autofillHints="none"
             android:hint="@string/searchbar_hint"
             android:imeOptions="actionSearch"
-            android:inputType="textAutoComplete"
+            android:inputType="textNoSuggestions"
             android:singleLine="true"
             android:textSize="@dimen/text_16" />
 
@@ -48,79 +59,98 @@
             android:visibility="gone" />
     </LinearLayout>
 
+    <!-- Search Results RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchResultsRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/normal_100"
-        android:clipToPadding="false"
-        android:paddingBottom="?attr/actionBarSize"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/normal_150"
+        android:requiresFadingEdge="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+        app:layout_constraintStart_toStartOf="@id/guidelineStart"
+        app:layout_constraintTop_toBottomOf="@id/searchBarContainerLayout" />
 
-    <LinearLayout
-        android:id="@+id/searchHistoryLayout"
-        android:layout_width="match_parent"
+    <!-- Search History -->
+    <TextView
+        android:id="@+id/searchHistoryLabel"
+        style="@style/Text.Medium.19"
+        android:layout_width="wrap_content"
+        android:layout_marginVertical="@dimen/normal_150"
+        android:text="@string/been_searched"
+        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+        app:layout_constraintStart_toStartOf="@id/guidelineStart"
+        app:layout_constraintTop_toBottomOf="@id/searchBarContainerLayout" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/searchHistoryRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/normal_150"
+        android:paddingBottom="@dimen/normal_150"
+        android:requiresFadingEdge="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@+id/searchHistoryClearButton"
+        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+        app:layout_constraintStart_toStartOf="@id/guidelineStart"
+        app:layout_constraintTop_toBottomOf="@id/searchHistoryLabel" />
+
+    <Button
+        android:id="@+id/searchHistoryClearButton"
+        style="@style/Button.Common"
+        android:layout_marginTop="@dimen/normal_150"
+        android:text="@string/clear_history"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+        app:layout_constraintStart_toStartOf="@id/guidelineStart" />
+
+    <!-- Search Status Layout -->
+    <ProgressBar
+        android:id="@+id/searchProgressBar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/blue"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchBarContainerLayout" />
+
+    <ImageView
+        android:id="@+id/searchStatusImageView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/normal_100"
-        android:clipToPadding="false"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:layout_marginTop="@dimen/big_325"
+        android:importantForAccessibility="no" />
 
-        <TextView
-            style="@style/Text.Medium.19"
-            android:layout_margin="@dimen/normal_100"
-            android:text="@string/been_searched" />
+    <TextView
+        android:id="@+id/searchStatusTextView"
+        style="@style/Text.Medium.19"
+        android:layout_width="0dp"
+        android:layout_marginHorizontal="@dimen/normal_150"
+        android:layout_marginTop="@dimen/normal_100"
+        android:layout_marginBottom="@dimen/normal_150"
+        android:maxLines="4"
+        android:textAlignment="center" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/searchHistoryRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:clipToPadding="false"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+    <Button
+        android:id="@+id/searchStatusReloadButton"
+        style="@style/Button.Common"
+        android:text="@string/reload" />
 
-        <Button
-            android:id="@+id/searchHistoryClearButton"
-            style="@style/Button.Common"
-            android:text="@string/clear_history" />
-    </LinearLayout>
+    <androidx.constraintlayout.helper.widget.Flow
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:constraint_referenced_ids="searchStatusImageView,searchStatusTextView,searchStatusReloadButton"
+        app:flow_maxElementsWrap="1"
+        app:flow_verticalGap="@dimen/normal_100"
+        app:flow_verticalStyle="packed"
+        app:flow_wrapMode="chain"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+        app:layout_constraintStart_toStartOf="@id/guidelineStart"
+        app:layout_constraintTop_toBottomOf="@id/searchBarContainerLayout" />
 
-    <LinearLayout
-        android:id="@+id/searchStatusLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/big_325"
-            android:orientation="horizontal">
-
-            <Space style="@style/Weight.Horizontal.1" />
-
-            <ImageView
-                android:id="@+id/searchStatusImageView"
-                style="@style/Weight.Horizontal.1"
-                android:importantForAccessibility="no" />
-
-            <Space style="@style/Weight.Horizontal.1" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/searchStatusTextView"
-            style="@style/Text.Medium.19"
-            android:layout_width="match_parent"
-            android:layout_marginHorizontal="@dimen/normal_150"
-            android:layout_marginTop="@dimen/normal_100"
-            android:layout_marginBottom="@dimen/normal_150"
-            android:maxLines="4"
-            android:textAlignment="center" />
-
-        <Button
-            android:id="@+id/searchStatusReloadButton"
-            style="@style/Button.Common"
-            android:text="@string/reload" />
-    </LinearLayout>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

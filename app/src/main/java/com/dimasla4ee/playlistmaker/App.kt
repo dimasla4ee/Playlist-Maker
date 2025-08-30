@@ -15,8 +15,8 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        prefs = getSharedPreferences(PreferenceKeys.APP_PREFERENCES, MODE_PRIVATE)
-        isDarkThemeEnabled = prefs.getBoolean(PreferenceKeys.Keys.DARK_THEME, isDarkThemeEnabled)
+        prefs = getSharedPreferences(Keys.APP_PREFERENCES, MODE_PRIVATE)
+        isDarkThemeEnabled = prefs.getBoolean(Keys.Preference.DARK_THEME, isDarkThemeEnabled)
         setAppTheme(isDarkThemeEnabled)
     }
 
@@ -28,7 +28,7 @@ class App : Application() {
         )
 
         prefs.edit {
-            putBoolean(PreferenceKeys.Keys.DARK_THEME, useDarkTheme)
+            putBoolean(Keys.Preference.DARK_THEME, useDarkTheme)
         }
     }
 }

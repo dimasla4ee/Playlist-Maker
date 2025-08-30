@@ -37,7 +37,10 @@ class TracksViewHolder(
         )
 
         trackContainer.setOnClickListener {
-            onItemClick(track)
+            if (Debouncer.isClickAllowed()) {
+                onItemClick(track)
+                LogUtil.d("TracksViewHolder", "bind: $track")
+            }
         }
 
         Glide.with(itemView)
