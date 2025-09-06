@@ -1,4 +1,4 @@
-package com.dimasla4ee.playlistmaker.view
+package com.dimasla4ee.playlistmaker.presentation.ui
 
 import android.content.Context
 import android.util.AttributeSet

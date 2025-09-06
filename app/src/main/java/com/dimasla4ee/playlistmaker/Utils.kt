@@ -87,3 +87,4 @@ fun setupWindowInsets(
  * @return A string representation of the time in minutes and seconds.
  */
 fun Int.toMmSs(): String = SimpleDateFormat("mm:ss", Locale.getDefault()).format(this)
+fun Long.toMmSs(): String = SimpleDateFormat("mm:ss", Locale.getDefault()).format(this)

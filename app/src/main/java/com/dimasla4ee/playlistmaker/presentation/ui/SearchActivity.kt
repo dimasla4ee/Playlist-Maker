@@ -1,8 +1,9 @@
-package com.dimasla4ee.playlistmaker.activity
+package com.dimasla4ee.playlistmaker.presentation.ui
 
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -12,15 +13,14 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
-import com.dimasla4ee.playlistmaker.Debouncer
-import com.dimasla4ee.playlistmaker.ItunesApiClient
 import com.dimasla4ee.playlistmaker.Keys
-import com.dimasla4ee.playlistmaker.LogUtil
 import com.dimasla4ee.playlistmaker.R
 import com.dimasla4ee.playlistmaker.SearchHistory
-import com.dimasla4ee.playlistmaker.Track
-import com.dimasla4ee.playlistmaker.TracksAdapter
+import com.dimasla4ee.playlistmaker.creator.Creator
 import com.dimasla4ee.playlistmaker.databinding.ActivitySearchBinding
+import com.dimasla4ee.playlistmaker.domain.models.Track
+import com.dimasla4ee.playlistmaker.domain.usecase.Consumer
+import com.dimasla4ee.playlistmaker.domain.usecase.ConsumerData
 import com.dimasla4ee.playlistmaker.setupWindowInsets
 import com.dimasla4ee.playlistmaker.show
 
@@ -31,6 +31,8 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchInputEditText: EditText
     private lateinit var searchHistoryAdapter: TracksAdapter
     private lateinit var searchResultsAdapter: TracksAdapter
+
+    private lateinit var handler: Handler
 
     private lateinit var searchHistory: SearchHistory
     private var query: String = DEFAULT_QUERY
@@ -51,6 +53,8 @@ class SearchActivity : AppCompatActivity() {
                 binding.searchHistoryClearButton.layoutParams = params
             }
         }
+
+        handler = Handler(mainLooper)
 
         searchInputEditText = binding.searchInputEditText
 
@@ -165,16 +169,26 @@ class SearchActivity : AppCompatActivity() {
 
         binding.searchProgressBar.show(true)
 
-        ItunesApiClient.getSongs(
+        Creator.provideGetTracksUseCase().execute(
             query = query,
-            onSuccess = { call, response ->
-                val tracksList = response.body()?.results ?: return@getSongs
-                searchResultsAdapter.submitList(tracksList)
-                setContent(if (tracksList.isEmpty()) ContentType.NO_RESULTS else ContentType.TRACKLIST)
-            },
-            onFailure = { call, t ->
-                setContent(ContentType.ERROR)
-                LogUtil.e("SearchActivity", "fetchSongsAndUpdateUi: $t")
+            consumer = object : Consumer<List<Track>> {
+                override fun consume(data: ConsumerData<List<Track>>) {
+                    handler.post {
+                        when (data) {
+                            is ConsumerData.Data -> {
+                                val tracks = data.value
+                                searchResultsAdapter.submitList(tracks)
+                                setContent(
+                                    if (tracks.isEmpty()) ContentType.NO_RESULTS else ContentType.TRACKLIST
+                                )
+                            }
+
+                            is ConsumerData.Error -> {
+                                setContent(ContentType.ERROR)
+                            }
+                        }
+                    }
+                }
             }
         )
     }
@@ -222,3 +236,10 @@ class SearchActivity : AppCompatActivity() {
         const val DEFAULT_QUERY = ""
     }
 }
+
+/*
+    1. No Internet search causes FATAL EXCEPTION instead of showing error screen.
+    2. Move search history and toggle dark theme logic to corresponding repositories.
+    (3.) Migrate to kotlinx-serialization.
+    (4.) Migrate to DataStore.
+ */

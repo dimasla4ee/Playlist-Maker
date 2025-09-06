@@ -1,4 +1,4 @@
-package com.dimasla4ee.playlistmaker
+package com.dimasla4ee.playlistmaker.presentation.ui
 
 import android.os.Handler
 import android.os.Looper

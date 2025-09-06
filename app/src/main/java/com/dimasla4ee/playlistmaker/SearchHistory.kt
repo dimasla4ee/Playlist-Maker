@@ -2,11 +2,13 @@ package com.dimasla4ee.playlistmaker
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import com.dimasla4ee.playlistmaker.domain.models.Track
 import com.google.gson.Gson
 
 class SearchHistory(
     private val prefs: SharedPreferences
 ) {
+
     private val gson = Gson()
     private var savedTracks: ArrayDeque<Track> = ArrayDeque()
 

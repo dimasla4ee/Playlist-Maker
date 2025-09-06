@@ -1,4 +1,4 @@
-package com.dimasla4ee.playlistmaker.activity
+package com.dimasla4ee.playlistmaker.presentation.ui
 
 import android.media.MediaPlayer
 import android.os.Build
@@ -11,8 +11,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.dimasla4ee.playlistmaker.Keys
 import com.dimasla4ee.playlistmaker.R
-import com.dimasla4ee.playlistmaker.Track
 import com.dimasla4ee.playlistmaker.databinding.ActivityPlayerBinding
+import com.dimasla4ee.playlistmaker.domain.models.Track
 import com.dimasla4ee.playlistmaker.dpToPx
 import com.dimasla4ee.playlistmaker.setupWindowInsets
 import com.dimasla4ee.playlistmaker.show
@@ -53,7 +53,7 @@ class PlayerActivity : AppCompatActivity() {
 
         binding.panelHeader.setOnIconClickListener { finish() }
 
-        preparePlayer(track.urlPreviewAudio)
+        preparePlayer(track.audioUrl)
 
         binding.playButton.setOnClickListener {
             playbackControl()
@@ -70,7 +70,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun fillTrackInfo(track: Track) {
         binding.apply {
-            songDurationFetched.text = track.formatedDuration
+            songDurationFetched.text = track.duration
 
             track.year.let { year ->
                 if (year == null) {
@@ -82,7 +82,7 @@ class PlayerActivity : AppCompatActivity() {
             }
 
             track.album.let { album ->
-                if (album.isEmpty()) {
+                if (album == null) {
                     songAlbumFetched.show(false)
                     songAlbumLabel.show(false)
                 } else {
@@ -105,7 +105,7 @@ class PlayerActivity : AppCompatActivity() {
             placeholder?.setTint(getColor(R.color.light_gray))
 
             Glide.with(root)
-                .load(track.urlBigArtwork)
+                .load(track.coverUrl)
                 .placeholder(placeholder)
                 .transform(RoundedCorners(pxRadius))
                 .fitCenter()

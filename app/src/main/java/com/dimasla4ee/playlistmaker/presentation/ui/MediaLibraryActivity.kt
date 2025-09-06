@@ -1,4 +1,4 @@
-package com.dimasla4ee.playlistmaker.activity
+package com.dimasla4ee.playlistmaker.presentation.ui
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

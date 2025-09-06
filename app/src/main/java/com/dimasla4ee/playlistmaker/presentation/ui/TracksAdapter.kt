@@ -1,9 +1,11 @@
-package com.dimasla4ee.playlistmaker
+package com.dimasla4ee.playlistmaker.presentation.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import com.dimasla4ee.playlistmaker.R
+import com.dimasla4ee.playlistmaker.domain.models.Track
 
 class TracksAdapter(
     private val onItemClick: (Track) -> Unit
@@ -13,7 +15,11 @@ class TracksAdapter(
         parent: ViewGroup,
         viewType: Int
     ): TracksViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(
+            R.layout.track_item,
+            parent,
+            false
+        )
         return TracksViewHolder(view)
     }
 
