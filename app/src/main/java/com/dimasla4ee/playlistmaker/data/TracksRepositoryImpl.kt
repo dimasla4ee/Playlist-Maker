@@ -11,14 +11,23 @@ class TracksRepositoryImpl : TracksRepository {
 
     override fun searchTracks(query: String): Resource<List<Track>> {
         val response = RetrofitNetworkClient.doRequest(TrackSearchRequest(query))
-        return if (response.resultCode == 200) {
-            Resource.Success(
-                (response as TrackSearchResponse).results.map {
-                    TracksMapper.map(it)
-                }
-            )
-        } else {
-            Resource.Failure("Something went wrong")
+
+        return when (response.resultCode) {
+            0 -> {
+                Resource.Failure("No internet connection")
+            }
+
+            200 -> {
+                Resource.Success(
+                    (response as TrackSearchResponse).results.map {
+                        TracksMapper.map(it)
+                    }
+                )
+            }
+
+            else -> {
+                Resource.Failure("Something went wrong")
+            }
         }
     }
 }

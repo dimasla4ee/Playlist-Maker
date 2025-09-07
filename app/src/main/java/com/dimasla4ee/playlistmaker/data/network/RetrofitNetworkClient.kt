@@ -1,8 +1,8 @@
 package com.dimasla4ee.playlistmaker.data.network
 
 import com.dimasla4ee.playlistmaker.data.NetworkClient
-import com.dimasla4ee.playlistmaker.domain.models.Response
 import com.dimasla4ee.playlistmaker.data.dto.TrackSearchRequest
+import com.dimasla4ee.playlistmaker.domain.models.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -23,11 +23,10 @@ object RetrofitNetworkClient : NetworkClient {
 
     override fun doRequest(dto: Any): Response = when (dto) {
         is TrackSearchRequest -> {
-            val response = service.getSongs(dto.term).execute()
+            val response = runCatching { service.getSongs(dto.term).execute() }.getOrNull()
+            val body = response?.body() ?: Response()
 
-            val body = response.body() ?: Response()
-
-            body.apply { resultCode = response.code() }
+            body.apply { resultCode = response?.code() ?: 0 }
         }
 
         else -> {

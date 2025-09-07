@@ -169,7 +169,7 @@ class SearchActivity : AppCompatActivity() {
 
         binding.searchProgressBar.show(true)
 
-        Creator.provideGetTracksUseCase().execute(
+        Creator.provideSearchTracksUseCase().execute(
             query = query,
             consumer = object : Consumer<List<Track>> {
                 override fun consume(data: ConsumerData<List<Track>>) {
@@ -238,8 +238,7 @@ class SearchActivity : AppCompatActivity() {
 }
 
 /*
-    1. No Internet search causes FATAL EXCEPTION instead of showing error screen.
-    2. Move search history and toggle dark theme logic to corresponding repositories.
-    (3.) Migrate to kotlinx-serialization.
-    (4.) Migrate to DataStore.
+    1. Move search history and toggle dark theme logic to corresponding repositories.
+    (2.) Migrate to kotlinx-serialization.
+    (3.) Migrate to DataStore.
  */

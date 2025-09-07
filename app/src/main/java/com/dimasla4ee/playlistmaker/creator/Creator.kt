@@ -10,7 +10,7 @@ object Creator {
         return TracksRepositoryImpl()
     }
 
-    fun provideGetTracksUseCase(): SearchTracksUseCase {
+    fun provideSearchTracksUseCase(): SearchTracksUseCase {
         return SearchTracksUseCase(getTracksRepository())
     }
 }
