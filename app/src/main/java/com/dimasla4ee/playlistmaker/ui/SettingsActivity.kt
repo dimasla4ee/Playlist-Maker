@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
-import com.dimasla4ee.playlistmaker.App
 import com.dimasla4ee.playlistmaker.R
 import com.dimasla4ee.playlistmaker.databinding.ActivitySettingsBinding
 import com.dimasla4ee.playlistmaker.util.setupWindowInsets

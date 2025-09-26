@@ -5,7 +5,7 @@ import androidx.core.content.edit
 import com.dimasla4ee.playlistmaker.util.Keys
 
 class SearchHistorySharedPrefs(
-    val prefs: SharedPreferences
+    private val prefs: SharedPreferences
 ) : SearchHistoryStorage {
 
     override fun get(): String? = prefs.getString(Keys.Preference.SEARCH_HISTORY, null)
