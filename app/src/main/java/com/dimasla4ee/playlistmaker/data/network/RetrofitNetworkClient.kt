@@ -1,8 +1,7 @@
 package com.dimasla4ee.playlistmaker.data.network
 
-import com.dimasla4ee.playlistmaker.data.NetworkClient
-import com.dimasla4ee.playlistmaker.data.dto.TrackSearchRequest
-import com.dimasla4ee.playlistmaker.domain.models.Response
+import com.dimasla4ee.playlistmaker.data.model.TrackSearchRequest
+import com.dimasla4ee.playlistmaker.domain.model.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
