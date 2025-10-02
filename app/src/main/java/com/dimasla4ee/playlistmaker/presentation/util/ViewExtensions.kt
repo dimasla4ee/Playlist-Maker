@@ -19,32 +19,34 @@ fun View.show(show: Boolean) {
 /**
  * Sets up window insets for a given View.
  *
- * This function applies padding to the `View` to account for system bars
- * (like the status bar) and the Input Method Editor (IME, e.g., the on-screen keyboard).
- * It ensures that the content of the `View` is not obscured by these system UI elements.
+ * This function applies padding to the `View` to account for specified system UI elements
+ * (e.g., system bars, IME).
+ * It ensures that the content of the `View` is not obscured by them.
  *
  * The padding is adjusted as follows:
- * - `top`: Padded by the top inset of the system bars.
- * - `left`: Padded by the left inset of the system bars.
- * - `right`: Padded by the right inset of the system bars.
- * - `bottom`: Padded by the maximum of the system bars' bottom inset and the IME's bottom inset.
+ * - `top`, `left`, `right`: Padded by the insets of the specified `insetsType`.
+ * - `bottom`:
+ * Padded by the maximum of the specified `insetsType`'s bottom inset and the IME's bottom inset.
  *   This handles cases where the keyboard is visible, ensuring content isn't hidden beneath it.
  *
- * An optional callback `extraInsetsHandler` can be provided to perform additional actions
- * after the insets have been processed and padding has been applied.
+ * @param insetsType The type of insets to apply padding for (e.g., system bars, navigation bars).
+ *                   Defaults to [InsetsTypes.SystemBars].
+ *                   This determines which insets are used for
+ *                   the top, left, and right padding, and as a baseline for the bottom padding.
  *
  * @param extraInsetsHandler An optional lambda function that will be invoked after the
- *                        window insets has been processed and padding has been applied
- *                        to the `View`.
- *                        It receives the `WindowInsetsCompat` object
- *                        as a parameter, allowing for further custom handling if needed.
- *                        Defaults to `null` if no additional action is required.
+ *                           window insets have been processed and padding has been applied
+ *                           to the `View`.
+ *                           It receives the `WindowInsetsCompat` object
+ *                           as a parameter, allowing for further custom handling if needed.
+ *                           Defaults to `null`.
  */
 fun View.setupWindowInsets(
+    insetsType: InsetsType = InsetsTypes.SystemBars,
     extraInsetsHandler: ((insets: WindowInsetsCompat) -> Unit)? = null
 ) {
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, windowInsets ->
-        val systemBarsInsets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+        val systemBarsInsets = windowInsets.getInsets(insetsType.value)
         val imeInsets = windowInsets.getInsets(WindowInsetsCompat.Type.ime())
 
         view.updatePadding(
