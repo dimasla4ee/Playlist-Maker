@@ -1,26 +1,32 @@
 package com.dimasla4ee.playlistmaker.data.repository
 
+import com.dimasla4ee.playlistmaker.data.local.LocalDateSerializer
 import com.dimasla4ee.playlistmaker.data.local.SearchHistoryStorage
-import com.dimasla4ee.playlistmaker.data.local.LocalDateAdapter
 import com.dimasla4ee.playlistmaker.domain.model.Track
 import com.dimasla4ee.playlistmaker.domain.repository.SearchHistoryRepository
 import com.dimasla4ee.playlistmaker.util.LogUtil
-import com.google.gson.GsonBuilder
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
 import java.time.LocalDate
 
 class SearchHistoryRepositoryImpl(
     val storage: SearchHistoryStorage
 ) : SearchHistoryRepository {
 
-    private val gson = GsonBuilder()
-        .registerTypeAdapter(LocalDate::class.java, LocalDateAdapter())
-        .create()
+    val json = Json {
+        ignoreUnknownKeys = true
+        isLenient = true
+        encodeDefaults = true
+        serializersModule = SerializersModule {
+            contextual(LocalDate::class, LocalDateSerializer)
+        }
+    }
     private val cache: ArrayDeque<Track> = ArrayDeque()
 
     init {
-        val savedTracks = storage.get()?.let {
-            gson.fromJson(it, Array<Track>::class.java)
-        } ?: emptyArray()
+        val savedTracks = storage.get()?.let { trackJson ->
+            json.decodeFromString<List<Track>>(trackJson)
+        } ?: emptyList()
 
         cache.addAll(savedTracks)
     }
@@ -49,7 +55,8 @@ class SearchHistoryRepositoryImpl(
         if (cache.isEmpty()) {
             storage.clear()
         } else {
-            storage.save(gson.toJson(cache))
+            val cacheJson = json.encodeToString(cache.toList())
+            storage.save(cacheJson)
         }
     }
 

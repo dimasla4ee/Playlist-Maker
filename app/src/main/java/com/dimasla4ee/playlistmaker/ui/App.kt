@@ -3,7 +3,7 @@ package com.dimasla4ee.playlistmaker.ui
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.dimasla4ee.playlistmaker.creator.Creator
-import com.dimasla4ee.playlistmaker.creator.SettingsInteractor
+import com.dimasla4ee.playlistmaker.domain.use_case.SettingsInteractor
 import com.dimasla4ee.playlistmaker.util.Keys
 
 class App : Application() {

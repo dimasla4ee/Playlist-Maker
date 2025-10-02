@@ -8,17 +8,26 @@ import java.time.format.DateTimeFormatter
 
 object TrackMapper {
 
-    fun map(trackDto: TrackDto): Track? = trackDto.previewUrl?.let { audioUrl ->
-        Track(
-            id = trackDto.trackId,
-            title = trackDto.trackName,
-            artist = trackDto.artistName,
-            country = trackDto.country,
+    fun map(trackDto: TrackDto): Track? {
+        val id = trackDto.trackId ?: return null
+        val title = trackDto.trackName ?: return null
+        val artist = trackDto.artistName ?: return null
+        val country = trackDto.country ?: return null
+        val genre = trackDto.primaryGenreName ?: return null
+        val duration = trackDto.trackTimeMillis ?: return null
+        val thumbnailUrl = trackDto.artworkUrl100 ?: return null
+        val audioUrl = trackDto.previewUrl ?: return null
+
+        return Track(
+            id = id,
+            title = title,
+            artist = artist,
+            country = country,
             album = trackDto.collectionName,
             releaseDate = trackDto.releaseDate?.toLocalDate(),
-            genre = trackDto.primaryGenreName,
-            duration = trackDto.trackTimeMillis,
-            thumbnailUrl = trackDto.artworkUrl100,
+            genre = genre,
+            duration = duration,
+            thumbnailUrl = thumbnailUrl,
             audioUrl = audioUrl
         )
     }

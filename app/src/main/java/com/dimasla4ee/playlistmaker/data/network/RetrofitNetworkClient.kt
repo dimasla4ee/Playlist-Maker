@@ -2,17 +2,29 @@ package com.dimasla4ee.playlistmaker.data.network
 
 import com.dimasla4ee.playlistmaker.data.model.TrackSearchRequest
 import com.dimasla4ee.playlistmaker.domain.model.Response
+import com.dimasla4ee.playlistmaker.util.LogUtil
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
 object RetrofitNetworkClient : NetworkClient {
 
     private const val BASE_URL = "https://itunes.apple.com/"
+    private val json = Json {
+        ignoreUnknownKeys = true
+        isLenient = true
+        encodeDefaults = true
+    }
 
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(
+                json.asConverterFactory(
+                    "application/json; charset=UTF8".toMediaType()
+                )
+            )
             .build()
     }
 
@@ -22,9 +34,13 @@ object RetrofitNetworkClient : NetworkClient {
 
     override fun doRequest(dto: Any): Response = when (dto) {
         is TrackSearchRequest -> {
-            val response = runCatching { service.getSongs(dto.term).execute() }.getOrNull()
-            val body = response?.body() ?: Response()
+            val response = runCatching {
+                service.getSongs(dto.term).execute()
+            }.onFailure {
+                LogUtil.e("RetrofitNetworkClient", "doRequest: $it")
+            }.getOrNull()
 
+            val body = response?.body() ?: Response()
             body.apply { resultCode = response?.code() ?: 0 }
         }
 
