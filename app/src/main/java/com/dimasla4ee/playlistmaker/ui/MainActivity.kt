@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.dimasla4ee.playlistmaker.databinding.ActivityMainBinding
-import com.dimasla4ee.playlistmaker.util.setupWindowInsets
+import com.dimasla4ee.playlistmaker.presentation.util.setupWindowInsets
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binding.root)
         enableEdgeToEdge()
-        setupWindowInsets(binding.root)
+        binding.root.setupWindowInsets()
 
         setupListeners()
     }

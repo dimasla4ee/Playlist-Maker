@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import com.dimasla4ee.playlistmaker.R
 import com.dimasla4ee.playlistmaker.databinding.ActivitySettingsBinding
-import com.dimasla4ee.playlistmaker.util.setupWindowInsets
+import com.dimasla4ee.playlistmaker.presentation.util.setupWindowInsets
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -20,7 +20,7 @@ class SettingsActivity : AppCompatActivity() {
 
         setContentView(binding.root)
         enableEdgeToEdge()
-        setupWindowInsets(binding.root)
+        binding.root.setupWindowInsets()
 
         setupListeners()
     }

@@ -5,7 +5,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.dimasla4ee.playlistmaker.R
 import com.dimasla4ee.playlistmaker.databinding.ActivityMediaLibraryBinding
-import com.dimasla4ee.playlistmaker.util.setupWindowInsets
+import com.dimasla4ee.playlistmaker.presentation.util.setupWindowInsets
 
 class MediaLibraryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMediaLibraryBinding
@@ -18,6 +18,6 @@ class MediaLibraryActivity : AppCompatActivity() {
         setContentView(R.layout.activity_media_library)
         enableEdgeToEdge()
 
-        setupWindowInsets(binding.root)
+        binding.root.setupWindowInsets()
     }
 }

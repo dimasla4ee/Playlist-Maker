@@ -19,9 +19,9 @@ import com.dimasla4ee.playlistmaker.domain.consumer.Consumer
 import com.dimasla4ee.playlistmaker.domain.consumer.ConsumerData
 import com.dimasla4ee.playlistmaker.domain.model.Track
 import com.dimasla4ee.playlistmaker.domain.use_case.SearchHistoryInteractor
+import com.dimasla4ee.playlistmaker.presentation.util.setupWindowInsets
+import com.dimasla4ee.playlistmaker.presentation.util.show
 import com.dimasla4ee.playlistmaker.util.Keys
-import com.dimasla4ee.playlistmaker.util.setupWindowInsets
-import com.dimasla4ee.playlistmaker.util.show
 
 class SearchActivity : AppCompatActivity() {
 
@@ -42,7 +42,7 @@ class SearchActivity : AppCompatActivity() {
         setContentView(binding.root)
         enableEdgeToEdge()
 
-        setupWindowInsets(binding.root) { insets ->
+        binding.root.setupWindowInsets { insets ->
             val params = binding.searchHistoryClearButton.layoutParams
                     as? ViewGroup.MarginLayoutParams
 

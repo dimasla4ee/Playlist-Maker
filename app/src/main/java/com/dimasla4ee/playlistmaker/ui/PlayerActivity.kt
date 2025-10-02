@@ -9,16 +9,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.dimasla4ee.playlistmaker.util.Keys
 import com.dimasla4ee.playlistmaker.R
 import com.dimasla4ee.playlistmaker.databinding.ActivityPlayerBinding
 import com.dimasla4ee.playlistmaker.domain.model.Track
 import com.dimasla4ee.playlistmaker.presentation.mapper.TrackDetailedInfoMapper
 import com.dimasla4ee.playlistmaker.presentation.model.TrackDetailedInfo
-import com.dimasla4ee.playlistmaker.util.dpToPx
-import com.dimasla4ee.playlistmaker.util.setupWindowInsets
-import com.dimasla4ee.playlistmaker.util.show
-import com.dimasla4ee.playlistmaker.util.toMmSs
+import com.dimasla4ee.playlistmaker.presentation.util.dpToPx
+import com.dimasla4ee.playlistmaker.presentation.util.setupWindowInsets
+import com.dimasla4ee.playlistmaker.presentation.util.show
+import com.dimasla4ee.playlistmaker.presentation.util.toMmSs
+import com.dimasla4ee.playlistmaker.util.Keys
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -41,7 +41,7 @@ class PlayerActivity : AppCompatActivity() {
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         enableEdgeToEdge()
-        setupWindowInsets(binding.root)
+        binding.root.setupWindowInsets()
 
         handler = Handler(mainLooper)
 

@@ -9,8 +9,8 @@ import com.dimasla4ee.playlistmaker.R
 import com.dimasla4ee.playlistmaker.databinding.TrackItemBinding
 import com.dimasla4ee.playlistmaker.domain.model.Track
 import com.dimasla4ee.playlistmaker.presentation.mapper.TrackDetailedInfoMapper
+import com.dimasla4ee.playlistmaker.presentation.util.dpToPx
 import com.dimasla4ee.playlistmaker.util.LogUtil
-import com.dimasla4ee.playlistmaker.util.dpToPx
 
 class TracksViewHolder(
     itemView: View

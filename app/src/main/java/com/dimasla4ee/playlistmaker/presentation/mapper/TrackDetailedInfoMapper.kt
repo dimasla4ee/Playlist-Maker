@@ -2,8 +2,7 @@ package com.dimasla4ee.playlistmaker.presentation.mapper
 
 import com.dimasla4ee.playlistmaker.domain.model.Track
 import com.dimasla4ee.playlistmaker.presentation.model.TrackDetailedInfo
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.dimasla4ee.playlistmaker.presentation.util.toMmSs
 
 object TrackDetailedInfoMapper {
 
@@ -24,8 +23,4 @@ object TrackDetailedInfoMapper {
     private fun getCover(thumbnailUrl: String): String = thumbnailUrl.replaceAfterLast(
         '/', ARTWORK_BIG_RESOLUTION_SUFFIX
     )
-
-    private fun Long.toMmSs(): String = SimpleDateFormat(
-        "mm:ss", Locale.getDefault()
-    ).format(this)
 }
